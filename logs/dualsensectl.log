@@ -143,3 +143,6 @@
 [2024-12-08 16:33:14]: Executing command: dualsensectl battery
 [2024-12-08 16:33:14]: Command output: 100 full
 [2024-12-08 16:33:23]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:12:03]: Executing command: dualsensectl player-leds 3
+[2024-12-08 17:12:09]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:21:47]: Executing command: dualsensectl player-leds 3

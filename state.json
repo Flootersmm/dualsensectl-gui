@@ -1,4 +1,5 @@
 {
   "lightbar_enabled": true,
-  "battery_percentage": 100.0
+  "battery_percentage": 0.0,
+  "playerleds": 3
 }

@@ -1,7 +1,8 @@
 use gtk::Button;
+use gtk::Entry;
 use gtk::LevelBar;
 use gtk::{prelude::*, Label};
-use gtk::{Box, Orientation, Switch};
+use gtk::{Box, InputPurpose, Orientation, Switch};
 
 pub fn create_labeled_level_bar(
     label_text: &str,
@@ -35,6 +36,28 @@ pub fn create_labeled_level_bar(
     box_with_label.append(&level_bar);
 
     (box_with_label, level_bar)
+}
+
+pub fn create_labeled_entry(label_text: &str) -> (Box, Entry) {
+    let label = Label::new(Some(label_text));
+    let entry = Entry::builder()
+        .margin_top(6)
+        .margin_bottom(12)
+        .hexpand(false)
+        .halign(gtk::Align::Center)
+        .input_purpose(InputPurpose::Number)
+        .build();
+
+    let box_with_label = Box::builder()
+        .orientation(Orientation::Vertical)
+        .spacing(6)
+        .halign(gtk::Align::Center)
+        .build();
+
+    box_with_label.append(&label);
+    box_with_label.append(&entry);
+
+    (box_with_label, entry)
 }
 
 pub fn create_labeled_button(label_text: &str) -> (Box, Button) {

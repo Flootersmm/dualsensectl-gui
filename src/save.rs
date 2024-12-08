@@ -8,6 +8,7 @@ const STATE_FILE: &str = "state.json";
 pub struct AppState {
     pub lightbar_enabled: bool,
     pub battery_percentage: f64,
+    pub playerleds: u32,
 }
 
 impl Default for AppState {
@@ -15,6 +16,7 @@ impl Default for AppState {
         Self {
             lightbar_enabled: false,
             battery_percentage: 0.0,
+            playerleds: 1,
         }
     }
 }

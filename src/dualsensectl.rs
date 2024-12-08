@@ -15,6 +15,24 @@ pub fn toggle_lightbar(state: bool) {
     }
 }
 
+pub fn change_playerleds(state: u32) {
+    if !(0..=5).contains(&state) {
+        error!(
+            "Invalid player LED state: {}. Must be between 0 and 5.",
+            state
+        );
+        return;
+    }
+
+    let command = format!("dualsensectl player-leds {}", state);
+
+    info!("Executing command: {}", command);
+
+    if let Err(err) = Command::new("sh").arg("-c").arg(&command).output() {
+        error!("Failed to execute command '{}': {}", command, err);
+    }
+}
+
 pub fn report_battery() -> String {
     let command = "dualsensectl battery";
 
