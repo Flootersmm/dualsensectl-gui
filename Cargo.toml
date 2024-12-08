@@ -1,0 +1,8 @@
+[package]
+name = "gtk-app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+chrono = "0.4.38"
+gtk = { version = "0.9.4", package = "gtk4", features = ["v4_16"] }
