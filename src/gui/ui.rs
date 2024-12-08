@@ -9,22 +9,14 @@ use gtk::Button;
 use gtk::{Application, ApplicationWindow, Box, Orientation};
 
 pub fn build_ui(app: &Application) -> ApplicationWindow {
-    // Load saved state
     let app_state = load_state();
 
-    // Create the "Main" button
-    let button = CustomButton::new();
-    set_margins(&button, 12);
-
-    // Create the "Lightbar" labeled switch with the saved state
     let (lightbar_box, lightbar_switch) =
         create_labeled_switch("Lightbar", app_state.lightbar_enabled);
 
-    // Initialize the "Battery" labeled level bar with the saved state
     let (battery_box, battery_level_bar) =
         create_labeled_level_bar("Battery", app_state.battery_percentage, 0.0, 100.0);
 
-    // Add a refresh button for the battery level
     let refresh_button = Button::builder()
         .label("Refresh")
         .margin_top(6)
@@ -32,11 +24,9 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
         .build();
     battery_box.append(&refresh_button);
 
-    // Clone relevant widgets for closures
     let lightbar_switch_clone = lightbar_switch.clone();
     let battery_level_bar_clone = battery_level_bar.clone();
 
-    // Update battery level and save state on refresh
     refresh_button.connect_clicked(move |_| {
         let battery_percentage = report_battery()
             .trim_end_matches('%')
@@ -54,7 +44,6 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
         }
     });
 
-    // Save state whenever the lightbar switch is toggled
     let battery_level_bar_clone = battery_level_bar.clone();
     lightbar_switch.connect_state_set(move |_, state| {
         toggle_lightbar(state);
@@ -68,7 +57,6 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
         Propagation::Proceed
     });
 
-    // Create layout
     let hbox = Box::builder()
         .orientation(Orientation::Horizontal)
         .spacing(20)
@@ -93,7 +81,6 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
         .child(&vbox)
         .build();
 
-    // Save state on window close
     let battery_level_bar_clone = battery_level_bar.clone();
     let lightbar_switch_clone = lightbar_switch.clone();
     window.connect_close_request(move |win| {
