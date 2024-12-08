@@ -1,5 +1,7 @@
 use log::{error, info};
 use std::process::Command;
+use std::thread;
+use std::time::Duration;
 
 pub fn toggle_lightbar(state: bool) {
     let command = if state {
@@ -15,7 +17,7 @@ pub fn toggle_lightbar(state: bool) {
     }
 }
 
-pub fn change_playerleds(state: u32) {
+pub fn change_playerleds(state: u32, lightbar_state: bool) {
     if !(0..=5).contains(&state) {
         error!(
             "Invalid player LED state: {}. Must be between 0 and 5.",
@@ -25,12 +27,18 @@ pub fn change_playerleds(state: u32) {
     }
 
     let command = format!("dualsensectl player-leds {}", state);
-
     info!("Executing command: {}", command);
 
     if let Err(err) = Command::new("sh").arg("-c").arg(&command).output() {
         error!("Failed to execute command '{}': {}", command, err);
+        return;
     }
+
+    // Weirdly, playerleds don't update until the light bar does, so we toggle it
+    // We have to wait between toggles or else it misses it
+    toggle_lightbar(!lightbar_state);
+    thread::sleep(Duration::from_secs(3));
+    toggle_lightbar(lightbar_state);
 }
 
 pub fn report_battery() -> String {

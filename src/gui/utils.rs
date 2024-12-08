@@ -10,10 +10,8 @@ pub fn create_labeled_level_bar(
     min: f64,
     max: f64,
 ) -> (Box, LevelBar) {
-    // Create the label
     let label = Label::new(Some(label_text));
 
-    // Create the level bar
     let level_bar = LevelBar::builder()
         .min_value(min)
         .max_value(max)
@@ -21,10 +19,12 @@ pub fn create_labeled_level_bar(
         .margin_top(6)
         .margin_bottom(12)
         .hexpand(true)
+        .vexpand(true)
         .halign(gtk::Align::Center)
+        .valign(gtk::Align::Center)
         .build();
 
-    level_bar.set_width_request(200); // Ensure visibility with explicit width
+    level_bar.set_width_request(200);
 
     let box_with_label = Box::builder()
         .orientation(Orientation::Vertical)

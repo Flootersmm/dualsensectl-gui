@@ -1,4 +1,3 @@
-use crate::custom_button::CustomButton;
 use crate::dualsensectl::*;
 use crate::gui::utils::*;
 use crate::save::*;
@@ -6,36 +5,31 @@ use crate::save::*;
 use gtk::glib::Propagation;
 use gtk::prelude::*;
 use gtk::Button;
-use gtk::{Application, ApplicationWindow, Box, DropDown, Orientation};
+use gtk::{Application, ApplicationWindow, Box, DropDown, Orientation, Separator};
 
 pub fn build_ui(app: &Application) -> ApplicationWindow {
-    // Load saved state
     let app_state = load_state();
 
-    // Create labeled switch for lightbar
     let (lightbar_box, lightbar_switch) =
         create_labeled_switch("Lightbar", app_state.lightbar_enabled);
 
-    // Create labeled level bar for battery
     let (battery_box, battery_level_bar) =
         create_labeled_level_bar("Battery", app_state.battery_percentage, 0.0, 100.0);
 
-    // Create refresh button for battery
     let refresh_button = Button::builder()
         .label("Refresh")
-        .margin_top(6)
+        .margin_top(12)
         .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
         .build();
-    battery_box.append(&refresh_button);
 
-    // Create a dropdown for player LEDs
     let playerleds_items = gtk::StringList::new(&["0", "1", "2", "3", "4", "5"]);
     let playerleds_dropdown = DropDown::builder()
         .model(&playerleds_items)
         .selected(app_state.playerleds as u32)
         .build();
 
-    // Create a box for the dropdown and submit button
     let submit_button = Button::builder()
         .label("Set Player LEDs")
         .margin_top(6)
@@ -50,17 +44,14 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
     playerleds_box.append(&playerleds_dropdown);
     playerleds_box.append(&submit_button);
 
-    // Add save button at the bottom right
     let save_button = Button::builder()
         .label("Save")
         .margin_top(12)
         .margin_bottom(12)
         .margin_start(12)
         .margin_end(12)
-        .halign(gtk::Align::End)
         .build();
 
-    // Refresh button logic
     let battery_level_bar_clone = battery_level_bar.clone();
     refresh_button.connect_clicked(move |_| {
         let battery_percentage = report_battery()
@@ -70,16 +61,21 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
         battery_level_bar_clone.set_value(battery_percentage);
     });
 
-    // Submit button logic for player LEDs
+    lightbar_switch.connect_state_set(move |_, state| {
+        toggle_lightbar(state);
+        Propagation::Proceed
+    });
+
     submit_button.connect_clicked({
         let playerleds_dropdown = playerleds_dropdown.clone();
+        let lightbar_switch = lightbar_switch.clone();
         move |_| {
             let playerleds = playerleds_dropdown.selected();
-            change_playerleds(playerleds);
+            let lightbar_state = lightbar_switch.is_active();
+            change_playerleds(playerleds, lightbar_state);
         }
     });
 
-    // Save button logic
     save_button.connect_clicked({
         let battery_level_bar = battery_level_bar.clone();
         let lightbar_switch = lightbar_switch.clone();
@@ -96,7 +92,6 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
         }
     });
 
-    // Create layout
     let hbox = Box::builder()
         .orientation(Orientation::Horizontal)
         .spacing(20)
@@ -104,6 +99,25 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
         .build();
     hbox.append(&lightbar_box);
     hbox.append(&battery_box);
+
+    let optsbox = Box::builder()
+        .orientation(Orientation::Vertical)
+        .spacing(10)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    let separator = Separator::builder()
+        .orientation(Orientation::Horizontal)
+        .margin_bottom(6)
+        .build();
+
+    optsbox.append(&separator);
+
+    optsbox.append(&save_button);
+    optsbox.append(&refresh_button);
 
     let vbox = Box::builder()
         .orientation(Orientation::Vertical)
@@ -115,7 +129,7 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
         .build();
     vbox.append(&hbox);
     vbox.append(&playerleds_box);
-    vbox.append(&save_button);
+    vbox.append(&optsbox);
 
     let window = ApplicationWindow::builder()
         .application(app)
@@ -123,7 +137,6 @@ pub fn build_ui(app: &Application) -> ApplicationWindow {
         .child(&vbox)
         .build();
 
-    // Save state on close
     let battery_level_bar_clone = battery_level_bar.clone();
     let lightbar_switch_clone = lightbar_switch.clone();
     let playerleds_dropdown_clone = playerleds_dropdown.clone();

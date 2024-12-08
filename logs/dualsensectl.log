@@ -146,3 +146,86 @@
 [2024-12-08 17:12:03]: Executing command: dualsensectl player-leds 3
 [2024-12-08 17:12:09]: Executing command: dualsensectl lightbar on
 [2024-12-08 17:21:47]: Executing command: dualsensectl player-leds 3
+[2024-12-08 17:22:51]: Executing command: dualsensectl player-leds 3
+[2024-12-08 17:23:00]: Executing command: dualsensectl player-leds 0
+[2024-12-08 17:23:04]: Executing command: dualsensectl battery
+[2024-12-08 17:23:04]: Command output: 100 full
+[2024-12-08 17:24:26]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:24:28]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:24:32]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:24:35]: Executing command: dualsensectl player-leds 2
+[2024-12-08 17:24:41]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:24:44]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:25:08]: Executing command: dualsensectl battery
+[2024-12-08 17:25:08]: Command output: 100 full
+[2024-12-08 17:25:13]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:25:17]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:31:18]: Executing command: dualsensectl player-leds 4
+[2024-12-08 17:31:18]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:31:18]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:32:49]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:32:51]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:32:53]: Executing command: dualsensectl player-leds 4
+[2024-12-08 17:32:53]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:32:56]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:32:59]: Executing command: dualsensectl player-leds 1
+[2024-12-08 17:32:59]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:33:02]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:33:05]: Executing command: dualsensectl player-leds 5
+[2024-12-08 17:33:05]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:33:08]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:33:17]: Executing command: dualsensectl battery
+[2024-12-08 17:33:17]: Command output: 100 full
+[2024-12-08 17:50:16]: Executing command: dualsensectl battery
+[2024-12-08 17:50:16]: Command output: 100 full
+[2024-12-08 17:50:32]: Executing command: dualsensectl battery
+[2024-12-08 17:50:32]: Command output: 100 full
+[2024-12-08 17:57:36]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:57:41]: Executing command: dualsensectl player-leds 1
+[2024-12-08 17:57:41]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:57:44]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:57:48]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:57:52]: Executing command: dualsensectl player-leds 0
+[2024-12-08 17:57:52]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:57:55]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:57:57]: Executing command: dualsensectl player-leds 2
+[2024-12-08 17:57:57]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:58:01]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:58:04]: Executing command: dualsensectl player-leds 4
+[2024-12-08 17:58:04]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:58:07]: Executing command: dualsensectl lightbar on
+[2024-12-08 17:58:23]: Executing command: dualsensectl player-leds 1
+[2024-12-08 17:58:27]: Executing command: dualsensectl lightbar off
+[2024-12-08 17:58:35]: Executing command: dualsensectl player-leds 5
+[2024-12-08 18:01:18]: Executing command: dualsensectl lightbar off
+[2024-12-08 18:01:18]: Executing command: dualsensectl lightbar off
+[2024-12-08 18:01:23]: Executing command: dualsensectl player-leds 5
+[2024-12-08 18:01:26]: Executing command: dualsensectl player-leds 0
+[2024-12-08 18:01:28]: Executing command: dualsensectl player-leds 1
+[2024-12-08 18:01:30]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:02:11]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:02:11]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:02:16]: Executing command: dualsensectl player-leds 5
+[2024-12-08 18:02:21]: Executing command: dualsensectl player-leds 4
+[2024-12-08 18:02:25]: Executing command: dualsensectl lightbar off
+[2024-12-08 18:02:26]: Executing command: dualsensectl player-leds 4
+[2024-12-08 18:02:28]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:02:58]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:03:01]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:03:19]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:03:20]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:03:42]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:03:43]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:03:49]: Executing command: dualsensectl player-leds 1
+[2024-12-08 18:03:55]: Executing command: dualsensectl lightbar off
+[2024-12-08 18:03:56]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:05:16]: Executing command: dualsensectl player-leds 0
+[2024-12-08 18:05:16]: Executing command: dualsensectl lightbar off
+[2024-12-08 18:05:19]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:05:19]: Executing command: dualsensectl lightbar off
+[2024-12-08 18:05:24]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:05:27]: Executing command: dualsensectl player-leds 4
+[2024-12-08 18:05:27]: Executing command: dualsensectl lightbar off
+[2024-12-08 18:05:30]: Executing command: dualsensectl lightbar on
+[2024-12-08 18:05:32]: Executing command: dualsensectl battery
+[2024-12-08 18:05:32]: Command output: 100 full
