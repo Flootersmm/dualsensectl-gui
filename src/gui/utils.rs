@@ -16,20 +16,21 @@ pub fn create_labeled_level_bar(
         .min_value(min)
         .max_value(max)
         .value(initial_value)
-        .margin_top(6)
+        .margin_top(12)
         .margin_bottom(12)
         .hexpand(true)
         .vexpand(true)
-        .halign(gtk::Align::Center)
-        .valign(gtk::Align::Center)
+        .halign(gtk::Align::Fill)
+        .valign(gtk::Align::Start)
         .build();
 
     level_bar.set_width_request(200);
 
     let box_with_label = Box::builder()
-        .orientation(Orientation::Vertical)
+        .orientation(Orientation::Horizontal)
         .spacing(6)
-        .halign(gtk::Align::Center)
+        .halign(gtk::Align::Fill)
+        .valign(gtk::Align::Start)
         .build();
 
     box_with_label.append(&label);

@@ -11,7 +11,7 @@ use gtk::glib::Propagation;
 use gtk::prelude::*;
 use gtk::{
     Adjustment, Application, ApplicationWindow, Box, Button, ColorDialog, ColorDialogButton,
-    DropDown, Orientation, Scale, Separator,
+    DropDown, Label, Orientation, Scale, Separator, Switch,
 };
 
 //////////////////////////////////////////////////////////
@@ -109,6 +109,8 @@ fn create_playerleds_controls(
         .selected(controller_state.playerleds.into())
         .build();
 
+    let playerleds_label = Label::new(Some("Player LEDs"));
+
     playerleds_dropdown.connect_selected_notify({
         let controller = Arc::clone(&controller);
         let playerleds_dropdown = playerleds_dropdown.clone();
@@ -132,8 +134,14 @@ fn create_playerleds_controls(
     let playerleds_box = Box::builder()
         .orientation(Orientation::Vertical)
         .spacing(6)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
         .halign(gtk::Align::Center)
+        .valign(gtk::Align::Start)
         .build();
+    playerleds_box.append(&playerleds_label);
     playerleds_box.append(&playerleds_dropdown);
 
     playerleds_box
@@ -146,8 +154,94 @@ fn create_playerleds_controls(
 pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> ApplicationWindow {
     let controller_state = load_state();
 
-    let (lightbar_box, lightbar_switch) =
-        create_labeled_switch("Lightbar", controller_state.lightbar_enabled);
+    // let (lightbar_box, lightbar_switch) =
+    // create_labeled_switch("Lightbar", controller_state.lightbar_enabled);
+
+    let lightbar_switch_label = Label::new(Some("Lightbar"));
+    let lightbar_switch = Switch::new();
+    lightbar_switch.set_margin_top(6);
+    lightbar_switch.set_margin_bottom(12);
+    lightbar_switch.set_active(controller_state.lightbar_enabled);
+    lightbar_switch.set_hexpand(false);
+    lightbar_switch.set_halign(gtk::Align::Center);
+
+    let lightbar_switch_box = Box::builder()
+        .orientation(Orientation::Vertical)
+        .spacing(6)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .halign(gtk::Align::Center)
+        .valign(gtk::Align::Start)
+        .build();
+    lightbar_switch_box.append(&lightbar_switch_label);
+    lightbar_switch_box.append(&lightbar_switch);
+
+    let microphone_switch_label = Label::new(Some("Microphone"));
+    let microphone_switch = Switch::new();
+    microphone_switch.set_margin_top(6);
+    microphone_switch.set_margin_bottom(12);
+    microphone_switch.set_active(controller_state.microphone);
+    microphone_switch.set_hexpand(false);
+    microphone_switch.set_halign(gtk::Align::Center);
+
+    let microphone_box = Box::builder()
+        .orientation(Orientation::Vertical)
+        .spacing(6)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .halign(gtk::Align::Center)
+        .valign(gtk::Align::Start)
+        .build();
+    microphone_box.append(&microphone_switch_label);
+    microphone_box.append(&microphone_switch);
+
+    let microphone_led_switch_label = Label::new(Some("Microphone_led"));
+    let microphone_led_switch = Switch::new();
+    microphone_led_switch.set_margin_top(6);
+    microphone_led_switch.set_margin_bottom(12);
+    microphone_led_switch.set_active(controller_state.microphone_led);
+    microphone_led_switch.set_hexpand(false);
+    microphone_led_switch.set_halign(gtk::Align::Center);
+
+    let microphone_led_box = Box::builder()
+        .orientation(Orientation::Vertical)
+        .spacing(6)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .halign(gtk::Align::Center)
+        .valign(gtk::Align::Start)
+        .build();
+    microphone_box.append(&microphone_led_switch_label);
+    microphone_box.append(&microphone_led_switch);
+
+    let volume_label = Label::new(Some("Volume"));
+    let volume_adjustment =
+        Adjustment::new(controller_state.volume as f64, 0.0, 255.0, 1.0, 10.0, 0.0);
+
+    let volume_slider = Scale::builder()
+        .orientation(gtk::Orientation::Horizontal)
+        .adjustment(&volume_adjustment)
+        .value_pos(gtk::PositionType::Right)
+        .hexpand_set(true)
+        .build();
+    let volume_box = Box::builder()
+        .orientation(Orientation::Vertical)
+        .spacing(6)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .halign(gtk::Align::Fill)
+        .valign(gtk::Align::Start)
+        .build();
+    volume_box.append(&volume_label);
+    volume_box.append(&volume_slider);
 
     let (battery_box, battery_level_bar) = create_labeled_level_bar(
         "Battery",
@@ -214,33 +308,64 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
         }
     });
 
-    let hbox = Box::builder()
+    let box_topmost = Box::builder()
         .orientation(Orientation::Horizontal)
         .spacing(20)
-        .halign(gtk::Align::Center)
+        .halign(gtk::Align::Fill)
+        .valign(gtk::Align::Start)
+        .vexpand(false)
         .build();
-    hbox.append(&lightbar_box);
-    hbox.append(&battery_box);
+    box_topmost.append(&battery_box);
+
+    let box_settings = Box::builder()
+        .orientation(Orientation::Horizontal)
+        .spacing(10)
+        .homogeneous(true)
+        .margin_top(1)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .halign(gtk::Align::Fill)
+        .valign(gtk::Align::Start)
+        .build();
+    box_settings.append(&lightbar_switch_box);
+    box_settings.append(&playerleds_box);
+    box_settings.append(&microphone_box);
+    box_settings.append(&microphone_led_box);
+    box_settings.append(&volume_box);
 
     let optsbox = Box::builder()
-        .orientation(Orientation::Vertical)
+        .orientation(Orientation::Horizontal)
         .spacing(10)
         .margin_top(12)
         .margin_bottom(12)
         .margin_start(12)
         .margin_end(12)
         .build();
+    optsbox.append(&save_button);
+    optsbox.append(&refresh_button);
 
-    let separator = Separator::builder()
+    let spacer = gtk::Box::builder()
+        .orientation(Orientation::Vertical)
+        .vexpand(true)
+        .build();
+
+    let separator_top = Separator::builder()
         .orientation(Orientation::Horizontal)
         .margin_bottom(6)
         .build();
 
-    optsbox.append(&separator);
-    optsbox.append(&save_button);
-    optsbox.append(&refresh_button);
+    let separator_color = Separator::builder()
+        .orientation(Orientation::Horizontal)
+        .margin_bottom(6)
+        .build();
 
-    let vbox = Box::builder()
+    let separator_settings = Separator::builder()
+        .orientation(Orientation::Horizontal)
+        .margin_bottom(6)
+        .build();
+
+    let box_main = Box::builder()
         .orientation(Orientation::Vertical)
         .spacing(10)
         .margin_top(12)
@@ -248,15 +373,18 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
         .margin_start(12)
         .margin_end(12)
         .build();
-    vbox.append(&hbox);
-    vbox.append(&playerleds_box);
-    vbox.append(&color_box);
-    vbox.append(&optsbox);
+    box_main.append(&separator_top);
+    box_main.append(&box_settings);
+    box_main.append(&separator_settings);
+    box_main.append(&color_box);
+    box_main.append(&separator_color);
+    box_main.append(&spacer);
+    box_main.append(&optsbox);
 
     let window = ApplicationWindow::builder()
         .application(app)
         .title("Dualsensectl GUI")
-        .child(&vbox)
+        .child(&box_main)
         .build();
 
     window.connect_close_request({
