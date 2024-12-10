@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::io::{self, Write};
 
+use crate::structs::Controller;
+
 const STATE_FILE: &str = "state.json";
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -21,18 +23,18 @@ impl Default for AppState {
     }
 }
 
-pub fn save_state(state: &AppState) -> io::Result<()> {
-    eprintln!("Saving state: {:?}", state);
-    let json = serde_json::to_string_pretty(state)?;
+pub fn save_state(controller: &Controller) -> io::Result<()> {
+    eprintln!("Saving controller state: {:?}", controller);
+    let json = serde_json::to_string_pretty(controller)?;
     let mut file = fs::File::create(STATE_FILE)?;
     file.write_all(json.as_bytes())?;
-    eprintln!("State saved to {}", STATE_FILE);
+    eprintln!("Controller state saved to {}", STATE_FILE);
     Ok(())
 }
 
-pub fn load_state() -> AppState {
+pub fn load_state() -> Controller {
     if let Ok(json) = fs::read_to_string(STATE_FILE) {
-        if let Ok(state) = serde_json::from_str::<AppState>(&json) {
+        if let Ok(state) = serde_json::from_str::<Controller>(&json) {
             eprintln!("Loaded state: {:?}", state);
             return state;
         } else {
@@ -41,5 +43,5 @@ pub fn load_state() -> AppState {
     } else {
         eprintln!("state.json not found, using default state");
     }
-    AppState::default()
+    Controller::default()
 }
