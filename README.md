@@ -9,6 +9,6 @@ dualsensectl doesn't have a gui and i want to learn gtk and rust :)
 
 ### Usage 
 To build:  
-`cargo build --release`
+`cargo build --release`  
 To run:  
 `cargo run --release`
