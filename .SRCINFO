@@ -1,0 +1,16 @@
+pkgbase = dualsensectl-gui
+	pkgdesc = A GTK4-based GUI for dualsensectl, built with Rust
+	pkgver = 0.0.1
+	pkgrel = 1
+	url = https://github.com/Flootersmm/dualsensectl-gui
+	arch = x86_64
+	license = GPL2
+	makedepends = cargo
+	makedepends = rust
+	depends = gtk4
+	depends = glib2
+	depends = libadwaita
+	source = dualsensectl-gui-0.0.1.tar.gz::https://github.com/Flootersmm/dualsensectl-gui/archive/v0.0.1.tar.gz
+	sha256sums = ede2059f8c6b606b5fe2ca73cff7ffb10b08721709f550912b726ab7a05a7095
+
+pkgname = dualsensectl-gui
