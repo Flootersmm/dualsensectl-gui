@@ -28,10 +28,18 @@ fn get_log_path() -> std::path::PathBuf {
     let log_dir = dirs::data_local_dir()
         .expect("Failed to determine local data directory")
         .join("dualsensectl-gui/logs");
+
     if !log_dir.exists() {
+        println!(
+            "Attempting to create log directory at: {}",
+            log_dir.display()
+        );
         fs::create_dir_all(&log_dir).expect("Failed to create log directory");
     }
-    log_dir.join("dualsensectl.log")
+
+    let log_path = log_dir.join("dualsensectl.log");
+    println!("Log path is: {}", log_path.display());
+    log_path
 }
 
 fn main() -> glib::ExitCode {
