@@ -11,7 +11,7 @@ use gtk::glib::Propagation;
 use gtk::prelude::*;
 use gtk::{
     Adjustment, Application, ApplicationWindow, Box, Button, ColorDialog, ColorDialogButton,
-    DropDown, Grid, Label, Orientation, Scale, Separator, Switch,
+    DropDown, Grid, Label, Orientation, Scale, Switch,
 };
 
 //////////////////////////////////////////////////////////
@@ -266,6 +266,21 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
         .title("Dualsensectl GUI")
         .child(&box_main)
         .build();
+
+    window.connect_close_request({
+        let controller_clone = Arc::clone(&controller);
+        move |win| {
+            if let Ok(controller) = controller_clone.lock() {
+                if let Err(err) = save_state(&controller) {
+                    eprintln!("Failed to save controller state: {}", err);
+                }
+            } else {
+                eprintln!("Failed to lock controller for saving state.");
+            }
+            win.close();
+            Propagation::Proceed
+        }
+    });
 
     window
 }

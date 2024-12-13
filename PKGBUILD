@@ -9,7 +9,7 @@ license=('GPL2')
 depends=('gtk4' 'glib2' 'libadwaita')
 makedepends=('cargo' 'rust')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('0e4007b114f8d2422aff1516ccadbf4243ee4661621cd1e08a993ad178c0a6eb')
+sha256sums=('34f1f9e1708228645d3e19604069ad2b7d23a1b1d945171851e9ba8f891bec48')
 build() {
   cd "$srcdir/$pkgname-$pkgver"
   cargo build --release --locked

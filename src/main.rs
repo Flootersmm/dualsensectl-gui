@@ -2,17 +2,17 @@
 
 mod custom_button;
 mod dualsensectl;
-mod file_ops;
 mod gui;
 mod save;
 mod structs;
 
+use dirs_next as dirs;
 use env_logger::Builder;
 use gui::ui::*;
 use log::Level;
 use save::load_state;
 use std::env;
-use std::fs::OpenOptions;
+use std::fs::{self, OpenOptions};
 use std::io::Write;
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -23,14 +23,26 @@ use gtk::Application;
 
 const APP_ID: &str = "org.gtk_rs.Dualsensectl";
 
+// ~/.local/share/dualsensectl-gui/logs/dualsensectl.log
+fn get_log_path() -> std::path::PathBuf {
+    let log_dir = dirs::data_local_dir()
+        .expect("Failed to determine local data directory")
+        .join("dualsensectl-gui/logs");
+    if !log_dir.exists() {
+        fs::create_dir_all(&log_dir).expect("Failed to create log directory");
+    }
+    log_dir.join("dualsensectl.log")
+}
+
 fn main() -> glib::ExitCode {
     let controller = Arc::new(Mutex::new(load_state()));
 
+    let log_file_path = get_log_path();
     let log_file = OpenOptions::new()
         .create(true)
         .append(true)
-        .open("./logs/dualsensectl.log")
-        .unwrap();
+        .open(&log_file_path)
+        .expect("Failed to open log file");
 
     env::set_var("RUST_LOG", "info");
     Builder::from_default_env()
@@ -51,7 +63,8 @@ fn main() -> glib::ExitCode {
                 timestamp,
                 level,
                 record.args()
-            )?;
+            )
+            .unwrap();
 
             writeln!(buf, "{} {}: {}", timestamp, level, record.args())
         })
