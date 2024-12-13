@@ -1,6 +1,6 @@
 # Maintainer: Conrad Clough <conrad.clough@hotmail.com> 
 pkgname=dualsensectl-gui
-pkgver=0.0.2
+pkgver=0.0.1
 pkgrel=1
 pkgdesc="A GTK4-based GUI for dualsensectl, built with Rust"
 arch=('x86_64')
@@ -9,7 +9,7 @@ license=('GPL2')
 depends=('gtk4' 'glib2' 'libadwaita')
 makedepends=('cargo' 'rust')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/v$pkgver.tar.gz")
-sha256sums=('e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855')
+sha256sums=('ede2059f8c6b606b5fe2ca73cff7ffb10b08721709f550912b726ab7a05a7095')
 build() {
   cd "$srcdir/$pkgname-$pkgver"
   cargo build --release --locked
