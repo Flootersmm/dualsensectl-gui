@@ -1,0 +1,496 @@
+[2024-12-09 19:44:06]: Executing command: dualsensectl player-leds 1
+[2024-12-09 19:44:08]: Executing command: dualsensectl battery
+[2024-12-09 19:44:08]: Command output: 100 full
+[2024-12-09 19:49:51]: Executing command: dualsensectl battery
+[2024-12-09 19:49:51]: Command output: 100 full
+[2024-12-09 19:49:59]: Executing command: dualsensectl battery
+[2024-12-09 19:49:59]: Command output: 100 full
+[2024-12-09 19:50:00]: Executing command: dualsensectl lightbar 230 97 0 148
+[2024-12-09 19:50:00]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:01]: Executing command: dualsensectl lightbar 230 97 0 144
+[2024-12-09 19:50:01]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:01]: Executing command: dualsensectl lightbar 230 97 0 143
+[2024-12-09 19:50:01]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:01]: Executing command: dualsensectl lightbar 230 97 0 142
+[2024-12-09 19:50:01]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:01]: Executing command: dualsensectl lightbar 230 97 0 141
+[2024-12-09 19:50:01]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:01]: Executing command: dualsensectl lightbar 230 97 0 140
+[2024-12-09 19:50:01]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:01]: Executing command: dualsensectl lightbar 230 97 0 139
+[2024-12-09 19:50:01]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:01]: Executing command: dualsensectl lightbar 230 97 0 138
+[2024-12-09 19:50:01]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:01]: Executing command: dualsensectl lightbar 230 97 0 137
+[2024-12-09 19:50:01]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:02]: Executing command: dualsensectl lightbar 230 97 0 131
+[2024-12-09 19:50:02]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 131
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 130
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 130
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 128
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 126
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 125
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 123
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 120
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 119
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 118
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 117
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 117
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:03]: Executing command: dualsensectl lightbar 230 97 0 116
+[2024-12-09 19:50:03]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 116
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 117
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 119
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 123
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 128
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 134
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 139
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 144
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 147
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 152
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 155
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 156
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 156
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 156
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 156
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 156
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 156
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 156
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 144
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 136
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 127
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 119
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 111
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 103
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 98
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:04]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:04]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 93
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 92
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 91
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:05]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:05]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 90
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 89
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 89
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 89
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 89
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 89
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 89
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 89
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 80
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 81
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 81
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 81
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 82
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 83
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 84
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 84
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 84
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 83
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 83
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:06]: Executing command: dualsensectl lightbar 230 97 0 25
+[2024-12-09 19:50:06]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:07]: Executing command: dualsensectl lightbar 230 97 0 23
+[2024-12-09 19:50:07]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:07]: Executing command: dualsensectl lightbar 230 97 0 22
+[2024-12-09 19:50:07]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:07]: Executing command: dualsensectl lightbar 230 97 0 19
+[2024-12-09 19:50:07]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:07]: Executing command: dualsensectl lightbar 230 97 0 14
+[2024-12-09 19:50:07]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:07]: Executing command: dualsensectl lightbar 230 97 0 1
+[2024-12-09 19:50:07]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:07]: Executing command: dualsensectl lightbar 230 97 0 0
+[2024-12-09 19:50:07]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:08]: Executing command: dualsensectl lightbar 230 97 0 1
+[2024-12-09 19:50:08]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:08]: Executing command: dualsensectl lightbar 230 97 0 11
+[2024-12-09 19:50:08]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:08]: Executing command: dualsensectl lightbar 230 97 0 44
+[2024-12-09 19:50:08]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:08]: Executing command: dualsensectl lightbar 230 97 0 79
+[2024-12-09 19:50:08]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:08]: Executing command: dualsensectl lightbar 230 97 0 116
+[2024-12-09 19:50:08]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:08]: Executing command: dualsensectl lightbar 230 97 0 160
+[2024-12-09 19:50:08]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:08]: Executing command: dualsensectl lightbar 230 97 0 208
+[2024-12-09 19:50:08]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:08]: Executing command: dualsensectl lightbar 230 97 0 240
+[2024-12-09 19:50:08]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:08]: Executing command: dualsensectl lightbar 230 97 0 255
+[2024-12-09 19:50:08]: Lightbar colour changed and enabled.
+[2024-12-09 19:50:14]: Executing command: dualsensectl player-leds 0
+[2024-12-09 19:55:14] [INFO]: Executing command: dualsensectl lightbar 230 97 0 121
+[2024-12-09 19:55:14] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:16] [INFO]: Executing command: dualsensectl lightbar 230 97 0 133
+[2024-12-09 19:55:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:16] [INFO]: Executing command: dualsensectl lightbar 230 97 0 134
+[2024-12-09 19:55:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:16] [INFO]: Executing command: dualsensectl lightbar 230 97 0 141
+[2024-12-09 19:55:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:16] [INFO]: Executing command: dualsensectl lightbar 230 97 0 160
+[2024-12-09 19:55:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:16] [INFO]: Executing command: dualsensectl lightbar 230 97 0 183
+[2024-12-09 19:55:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:16] [INFO]: Executing command: dualsensectl lightbar 230 97 0 206
+[2024-12-09 19:55:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:16] [INFO]: Executing command: dualsensectl lightbar 230 97 0 229
+[2024-12-09 19:55:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:16] [INFO]: Executing command: dualsensectl lightbar 230 97 0 247
+[2024-12-09 19:55:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:16] [INFO]: Executing command: dualsensectl lightbar 230 97 0 255
+[2024-12-09 19:55:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:38] [INFO]: Executing command: dualsensectl lightbar 230 97 0 132
+[2024-12-09 19:55:38] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 130
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 135
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 141
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 151
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 167
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 184
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 202
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 213
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 223
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 233
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 242
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 249
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 253
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 254
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-09 19:55:39] [INFO]: Executing command: dualsensectl lightbar 230 97 0 255
+[2024-12-09 19:55:39] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:10:45] [INFO]: Executing command: dualsensectl lightbar 230 97 0 231
+[2024-12-10 16:10:45] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 199
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 186
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 170
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 153
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 135
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 127
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 122
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 120
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 120
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 121
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 129
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 169
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 220
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 238
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:11:28] [INFO]: Executing command: dualsensectl lightbar 230 97 0 255
+[2024-12-10 16:11:28] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:22:02] [INFO]: Executing command: dualsensectl lightbar 230 97 0 201
+[2024-12-10 16:22:02] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:22:03] [INFO]: Executing command: dualsensectl lightbar 230 97 0 207
+[2024-12-10 16:22:03] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:22:03] [INFO]: Executing command: dualsensectl lightbar 230 97 0 239
+[2024-12-10 16:22:03] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:22:03] [INFO]: Executing command: dualsensectl lightbar 230 97 0 255
+[2024-12-10 16:22:03] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:29:06] [INFO]: Executing command: dualsensectl lightbar 224 27 36 255
+[2024-12-10 16:29:06] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:29:12] [INFO]: Executing command: dualsensectl lightbar 129 61 156 255
+[2024-12-10 16:29:12] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:31:16] [INFO]: Executing command: dualsensectl lightbar 129 61 156 41
+[2024-12-10 16:31:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:31:17] [INFO]: Executing command: dualsensectl lightbar 129 61 156 62
+[2024-12-10 16:31:17] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:31:17] [INFO]: Executing command: dualsensectl lightbar 129 61 156 147
+[2024-12-10 16:31:17] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:31:17] [INFO]: Executing command: dualsensectl lightbar 129 61 156 251
+[2024-12-10 16:31:17] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:31:17] [INFO]: Executing command: dualsensectl lightbar 129 61 156 255
+[2024-12-10 16:31:17] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:40:25] [INFO]: Executing command: dualsensectl lightbar 129 61 156 16
+[2024-12-10 16:40:25] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:40:26] [INFO]: Executing command: dualsensectl lightbar 129 61 156 34
+[2024-12-10 16:40:26] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:40:26] [INFO]: Executing command: dualsensectl lightbar 129 61 156 59
+[2024-12-10 16:40:26] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:40:26] [INFO]: Executing command: dualsensectl lightbar 129 61 156 182
+[2024-12-10 16:40:26] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:40:26] [INFO]: Executing command: dualsensectl lightbar 129 61 156 255
+[2024-12-10 16:40:26] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:40:29] [INFO]: Executing command: dualsensectl lightbar 129 61 156 222
+[2024-12-10 16:40:29] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:40:30] [INFO]: Executing command: dualsensectl lightbar 129 61 156 227
+[2024-12-10 16:40:30] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:40:30] [INFO]: Executing command: dualsensectl lightbar 129 61 156 237
+[2024-12-10 16:40:30] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 16:40:30] [INFO]: Executing command: dualsensectl lightbar 129 61 156 255
+[2024-12-10 16:40:30] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:09:06] [INFO]: Executing command: dualsensectl lightbar 129 61 156 200
+[2024-12-10 17:09:06] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:09:06] [INFO]: Executing command: dualsensectl lightbar 129 61 156 89
+[2024-12-10 17:09:06] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:09:06] [INFO]: Executing command: dualsensectl lightbar 129 61 156 22
+[2024-12-10 17:09:06] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:09:06] [INFO]: Executing command: dualsensectl lightbar 129 61 156 0
+[2024-12-10 17:09:06] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:09:06] [INFO]: Executing command: dualsensectl lightbar 129 61 156 111
+[2024-12-10 17:09:06] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:09:06] [INFO]: Executing command: dualsensectl lightbar 129 61 156 255
+[2024-12-10 17:09:06] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:19:15] [INFO]: Executing command: dualsensectl lightbar 129 61 156 210
+[2024-12-10 17:19:15] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:19:15] [INFO]: Executing command: dualsensectl lightbar 129 61 156 114
+[2024-12-10 17:19:15] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:19:16] [INFO]: Executing command: dualsensectl lightbar 129 61 156 0
+[2024-12-10 17:19:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:19:16] [INFO]: Executing command: dualsensectl lightbar 129 61 156 48
+[2024-12-10 17:19:16] [INFO]: Lightbar colour changed and enabled.
+[2024-12-10 17:19:16] [INFO]: Executing command: dualsensectl lightbar 129 61 156 255
+[2024-12-10 17:19:16] [INFO]: Lightbar colour changed and enabled.

@@ -1,0 +1,20 @@
+{
+  "lightbar_colour": [
+    129,
+    61,
+    156,
+    255
+  ],
+  "lightbar_enabled": true,
+  "battery_percentage": 100,
+  "playerleds": 0,
+  "microphone": false,
+  "microphone_led": false,
+  "speaker": "Internal",
+  "volume": 0,
+  "attentuation": 0,
+  "trigger": {
+    "side": "both",
+    "effect": "Off"
+  }
+}
