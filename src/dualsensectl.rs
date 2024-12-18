@@ -1,7 +1,7 @@
 use log::{error, info};
 use std::process::Command;
 
-use crate::structs::{Controller, Speaker};
+use crate::structs::*;
 
 pub fn toggle_lightbar(state: bool, controller: &mut Controller) {
     let command = if state {
@@ -146,7 +146,7 @@ pub fn toggle_microphone_led(controller: &mut Controller) {
 }
 
 pub fn change_volume(volume: u8, controller: &mut Controller) {
-    let command = format!("dualsensectl volume {}", controller.volume);
+    let command = format!("dualsensectl volume {}", volume);
 
     info!("Executing command: {}", command);
 
@@ -187,7 +187,24 @@ pub fn change_attenuation_amount(attenuation: Vec<u8>, controller: &mut Controll
     controller.attenuation = attenuation;
 }
 
-pub fn change_trigger(controller: &mut Controller) {}
+pub fn change_triggers(trigger: &Trigger) {
+    let command = format!("dualsensectl {}", trigger.to_command());
+
+    info!("Executing command: {}", command);
+
+    match Command::new("sh").arg("-c").arg(&command).output() {
+        Ok(output) => {
+            if let Ok(stdout) = String::from_utf8(output.stdout) {
+                info!("Command executed successfully: {}", stdout.trim());
+            } else {
+                error!("Failed to parse command stdout as UTF-8");
+            }
+        }
+        Err(err) => {
+            error!("Failed to execute command '{}': {}", command, err);
+        }
+    }
+}
 
 pub fn report_battery(controller: &mut Controller) -> String {
     let command = "dualsensectl battery";

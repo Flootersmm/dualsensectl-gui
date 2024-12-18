@@ -3,6 +3,8 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 
 use crate::dualsensectl::*;
+use crate::gui::presets::*;
+use crate::gui::profiles::*;
 use crate::gui::utils::*;
 use crate::save::*;
 use crate::structs::*;
@@ -11,10 +13,11 @@ use gtk::glib::Propagation;
 use gtk::prelude::*;
 use gtk::{
     Adjustment, Application, ApplicationWindow, Box, Button, ColorDialog, ColorDialogButton,
-    ComboBoxText, DropDown, Entry, Grid, Label, Orientation, Scale, Switch,
+    DropDown, Entry, Grid, Label, Orientation, Scale, StringList, Switch,
 };
 
 // TODO: Also make .desktop
+// speaker monoheadphone option
 
 //////////////////////////////////////////////////////////
 // Utility Functions
@@ -39,6 +42,25 @@ fn create_lightbar_controls(
     lightbar_switch.set_active(controller_state.lightbar_enabled);
     lightbar_switch.set_hexpand(false);
     lightbar_switch.set_halign(gtk::Align::Center);
+
+    lightbar_switch.connect_state_set({
+        let controller_clone = Arc::clone(&controller);
+        move |_, state| {
+            let controller_clone_inner = Arc::clone(&controller_clone);
+            thread::spawn(move || {
+                if let Ok(mut ctrl) = controller_clone_inner.lock() {
+                    toggle_lightbar(state, &mut ctrl);
+                    if let Err(err) = save_state(&*ctrl) {
+                        eprintln!("Failed to save controller state: {}", err);
+                    }
+                } else {
+                    eprintln!("Failed to lock controller for lightbar toggle.");
+                }
+            });
+            Propagation::Proceed
+        }
+    });
+
     let color_dialog = ColorDialog::builder().build();
     let color_dialog_button = ColorDialogButton::builder().build();
     color_dialog_button.set_dialog(&color_dialog);
@@ -229,7 +251,6 @@ fn create_microphone_controls(
     grid
 }
 
-/// Creates and manages the player LED controls (dropdown).
 fn create_playerleds_controls(
     controller: Arc<Mutex<Controller>>,
     controller_state: &Controller,
@@ -338,9 +359,11 @@ fn create_speaker_controls(
         .build();
 
     let controller_clone_2 = Arc::clone(&controller);
-    let volume = volume_adjustment.value().round() as u8;
+
     volume_slider.connect_value_changed(move |_| {
         let controller_clone = Arc::clone(&controller_clone_2);
+        let volume = volume_adjustment.value().round() as u8;
+
         thread::spawn(move || {
             if let Ok(mut ctrl) = controller_clone.lock() {
                 change_volume(volume, &mut ctrl);
@@ -432,12 +455,12 @@ fn create_attenuation_controls(
     grid
 }
 
-// Main function to create the trigger controls
 fn create_trigger_controls(
     controller: Arc<Mutex<Controller>>,
     controller_state: &Controller,
 ) -> Grid {
     let grid = Grid::builder()
+        .column_homogeneous(true)
         .row_spacing(6)
         .column_spacing(10)
         .margin_top(12)
@@ -446,8 +469,7 @@ fn create_trigger_controls(
         .margin_end(12)
         .build();
 
-    // Dropdown for selecting the TriggerEffect type
-    let trigger_effects = vec![
+    let trigger_effects = Arc::new(vec![
         "Off",
         "Feedback",
         "Weapon",
@@ -458,148 +480,324 @@ fn create_trigger_controls(
         "FeedbackRaw",
         "VibrationRaw",
         "Mode",
-    ];
+    ]);
 
-    let effect_dropdown = ComboBoxText::builder().hexpand(true).build();
+    let string_list = StringList::new(&trigger_effects);
+    let effect_dropdown = DropDown::builder().model(&string_list).selected(0).build();
 
-    for effect in &trigger_effects {
-        effect_dropdown.append(Some(effect), effect);
-    }
+    let initial_index = trigger_effects
+        .iter()
+        .position(|e| e == &format!("{:?}", controller_state.trigger.effect))
+        .unwrap_or(0);
+    effect_dropdown.set_selected(initial_index as u32);
 
-    // Set the current value based on the controller state
-    effect_dropdown.set_active_id(Some(&format!("{:?}", controller_state.trigger.effect)));
-
-    // Grid for dynamic input fields
     let input_grid = Grid::builder().row_spacing(6).column_spacing(10).build();
 
-    // Apply button
     let apply_button = Button::builder()
         .label("Apply")
         .halign(gtk::Align::End)
         .build();
 
-    // Handle dropdown change
-    effect_dropdown.connect_changed({
+    create_help_popup(
+        &grid,
+        "Trigger Modes:\n\
+         - Feedback: Position (0-9), Strength (1-8)\n\
+         - Weapon: Start (2-7), Stop (Start+1 to 8), Strength (1-8)\n\
+         - Bow: Start (1-8), Stop (Start+1 to 8), Strength (1-8), Snapforce (1-8)\n\
+         - Galloping: Start (0-8), Stop (Start+1 to 9), First Foot (0-6), Second Foot (First Foot+1 to 7), Frequency (>0)\n\
+         - Machine: Start (1-8), Stop (Start+1 to 9), Strength A/B (0-7), Frequency (>0), Period\n\
+         - Vibration: Position (0-9), Amplitude (1-8), Frequency (>0)\n\
+         - FeedbackRaw: 10 Strength values (0-8)\n\
+         - VibrationRaw: 10 Amplitudes (0-255), Frequency\n\
+         - Mode: 9 Params (comma-separated values)",
+        (3, 0),
+    );
+
+    let constraints = get_field_constraints();
+
+    effect_dropdown.connect_selected_notify({
         let input_grid = input_grid.clone();
+        let trigger_effects = Arc::clone(&trigger_effects);
+
         move |dropdown| {
             clear_grid(&input_grid);
+            let selected = dropdown.selected() as usize;
 
-            let selected = dropdown.active_id().unwrap_or_else(|| "Off".into());
-
-            match selected.as_str() {
-                "Feedback" => create_input_fields(&input_grid, &["Position", "Strength"]),
-                "Weapon" => create_input_fields(&input_grid, &["Start", "Stop", "Strength"]),
-                "Bow" => {
-                    create_input_fields(&input_grid, &["Start", "Stop", "Strength", "Snapforce"])
+            match trigger_effects[selected] {
+                "Feedback" => {
+                    create_validated_input_field(
+                        &input_grid,
+                        0,
+                        "Position",
+                        constraints["Feedback_Position"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        1,
+                        "Strength",
+                        constraints["Feedback_Strength"].clone(),
+                    );
                 }
-                "Galloping" => create_input_fields(
-                    &input_grid,
-                    &["Start", "Stop", "First Foot", "Second Foot", "Frequency"],
-                ),
-                "Machine" => create_input_fields(
-                    &input_grid,
-                    &[
+                "Weapon" => {
+                    let start_entry = create_validated_input_field(
+                        &input_grid,
+                        0,
                         "Start",
+                        constraints["Weapon_Start"].clone(),
+                    );
+                    let stop_entry = create_validated_input_field(
+                        &input_grid,
+                        1,
                         "Stop",
-                        "Strength A",
-                        "Strength B",
+                        constraints["Weapon_Stop"].clone(),
+                    );
+
+                    start_entry.connect_changed({
+                        let stop_entry = stop_entry.clone();
+                        move |e| {
+                            if let Ok(start) = e.text().parse::<u8>() {
+                                let dynamic_constraint = FieldConstraint {
+                                    min: start + 1,
+                                    max: 8,
+                                    tooltip: format!("Stop must be between {} and 8", start + 1),
+                                };
+                                stop_entry.set_tooltip_text(Some(&dynamic_constraint.tooltip));
+                            }
+                        }
+                    });
+
+                    create_validated_input_field(
+                        &input_grid,
+                        2,
+                        "Strength",
+                        constraints["Weapon_Strength"].clone(),
+                    );
+                }
+                "Bow" => {
+                    create_validated_input_field(
+                        &input_grid,
+                        0,
+                        "Start",
+                        constraints["Bow_Start"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        1,
+                        "Stop",
+                        constraints["Bow_Stop"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        2,
+                        "Strength",
+                        constraints["Bow_Strength"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        3,
+                        "Snapforce",
+                        constraints["Bow_Snapforce"].clone(),
+                    );
+                }
+                "Galloping" => {
+                    let start_entry = create_validated_input_field(
+                        &input_grid,
+                        0,
+                        "Start",
+                        constraints["Galloping_Start"].clone(),
+                    );
+                    let stop_entry = create_validated_input_field(
+                        &input_grid,
+                        1,
+                        "Stop",
+                        constraints["Galloping_Stop"].clone(),
+                    );
+
+                    start_entry.connect_changed({
+                        let stop_entry = stop_entry.clone();
+                        move |e| {
+                            if let Ok(start) = e.text().parse::<u8>() {
+                                let dynamic_constraint = FieldConstraint {
+                                    min: start + 1,
+                                    max: 9,
+                                    tooltip: format!("Stop must be between {} and 9", start + 1),
+                                };
+                                stop_entry.set_tooltip_text(Some(&dynamic_constraint.tooltip));
+                            }
+                        }
+                    });
+
+                    let first_foot_entry = create_validated_input_field(
+                        &input_grid,
+                        2,
+                        "First Foot",
+                        constraints["Galloping_FirstFoot"].clone(),
+                    );
+                    let second_foot_entry = create_validated_input_field(
+                        &input_grid,
+                        3,
+                        "Second Foot",
+                        constraints["Galloping_SecondFoot"].clone(),
+                    );
+
+                    first_foot_entry.connect_changed({
+                        let second_foot_entry = second_foot_entry.clone();
+                        move |e| {
+                            if let Ok(first_foot) = e.text().parse::<u8>() {
+                                let dynamic_constraint = FieldConstraint {
+                                    min: first_foot + 1,
+                                    max: 7,
+                                    tooltip: format!(
+                                        "Second Foot must be between {} and 7",
+                                        first_foot + 1
+                                    ),
+                                };
+                                second_foot_entry
+                                    .set_tooltip_text(Some(&dynamic_constraint.tooltip));
+                            }
+                        }
+                    });
+
+                    create_validated_input_field(
+                        &input_grid,
+                        4,
                         "Frequency",
+                        constraints["Galloping_Frequency"].clone(),
+                    );
+                }
+                "Machine" => {
+                    let start_entry = create_validated_input_field(
+                        &input_grid,
+                        0,
+                        "Start",
+                        constraints["Machine_Start"].clone(),
+                    );
+                    let stop_entry = create_validated_input_field(
+                        &input_grid,
+                        1,
+                        "Stop",
+                        constraints["Machine_Stop"].clone(),
+                    );
+
+                    start_entry.connect_changed({
+                        let stop_entry = stop_entry.clone();
+                        move |e| {
+                            if let Ok(start) = e.text().parse::<u8>() {
+                                let dynamic_constraint = FieldConstraint {
+                                    min: start + 1,
+                                    max: 9,
+                                    tooltip: format!("Stop must be between {} and 9", start + 1),
+                                };
+                                stop_entry.set_tooltip_text(Some(&dynamic_constraint.tooltip));
+                            }
+                        }
+                    });
+
+                    create_validated_input_field(
+                        &input_grid,
+                        2,
+                        "Strength A",
+                        constraints["Machine_StrengthA"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        3,
+                        "Strength B",
+                        constraints["Machine_StrengthB"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        4,
+                        "Frequency",
+                        constraints["Machine_Frequency"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        5,
                         "Period",
-                    ],
-                ),
+                        constraints["Machine_Period"].clone(),
+                    );
+                }
                 "Vibration" => {
-                    create_input_fields(&input_grid, &["Position", "Amplitude", "Frequency"])
+                    create_validated_input_field(
+                        &input_grid,
+                        0,
+                        "Position",
+                        constraints["Feedback_Position"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        1,
+                        "Amplitude",
+                        constraints["FeedbackRaw_Strength"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        2,
+                        "Frequency",
+                        constraints["VibrationRaw_Frequency"].clone(),
+                    );
                 }
-                "FeedbackRaw" => create_input_fields(&input_grid, &["Strength [10]"]),
+                "FeedbackRaw" => {
+                    create_validated_input_field(
+                        &input_grid,
+                        0,
+                        "Strength [10]",
+                        constraints["FeedbackRaw_Strength"].clone(),
+                    );
+                }
                 "VibrationRaw" => {
-                    create_input_fields(&input_grid, &["Amplitude [10]", "Frequency"])
+                    create_validated_input_field(
+                        &input_grid,
+                        0,
+                        "Amplitude [10]",
+                        constraints["VibrationRaw_Amplitude"].clone(),
+                    );
+                    create_validated_input_field(
+                        &input_grid,
+                        1,
+                        "Frequency",
+                        constraints["VibrationRaw_Frequency"].clone(),
+                    );
                 }
-                "Mode" => create_input_fields(&input_grid, &["Params"]),
-                _ => {} // No inputs for "Off"
+                "Mode" => {
+                    create_validated_input_field(
+                        &input_grid,
+                        0,
+                        "Params",
+                        constraints["Mode_Params"].clone(),
+                    );
+                }
+                _ => {}
             }
         }
     });
 
-    // Handle Apply button click
     apply_button.connect_clicked({
         let controller_clone = Arc::clone(&controller);
         let effect_dropdown = effect_dropdown.clone();
         let input_grid = input_grid.clone();
+        let trigger_effects = Arc::clone(&trigger_effects);
 
         move |_| {
-            let selected = effect_dropdown.active_id().unwrap_or_else(|| "Off".into());
+            let selected = effect_dropdown.selected() as usize;
             let mut new_effect = TriggerEffect::Off;
 
-            match selected.as_str() {
+            match trigger_effects[selected] {
                 "Feedback" => {
                     let values = get_input_values(&input_grid);
                     new_effect = TriggerEffect::Feedback {
-                        position: values[0],
-                        strength: values[1],
+                        position: values.get(0).cloned().unwrap_or_default(),
+                        strength: values.get(1).cloned().unwrap_or_default(),
                     };
                 }
                 "Weapon" => {
                     let values = get_input_values(&input_grid);
                     new_effect = TriggerEffect::Weapon {
-                        start: values[0],
-                        stop: values[1],
-                        strength: values[2],
+                        start: values.get(0).cloned().unwrap_or_default(),
+                        stop: values.get(1).cloned().unwrap_or_default(),
+                        strength: values.get(2).cloned().unwrap_or_default(),
                     };
-                }
-                "Bow" => {
-                    let values = get_input_values(&input_grid);
-                    new_effect = TriggerEffect::Bow {
-                        start: values[0],
-                        stop: values[1],
-                        strength: values[2],
-                        snapforce: values[3],
-                    };
-                }
-                "Galloping" => {
-                    let values = get_input_values(&input_grid);
-                    new_effect = TriggerEffect::Galloping {
-                        start: values[0],
-                        stop: values[1],
-                        first_foot: values[2],
-                        second_foot: values[3],
-                        frequency: values[4],
-                    };
-                }
-                "Machine" => {
-                    let values = get_input_values(&input_grid);
-                    new_effect = TriggerEffect::Machine {
-                        start: values[0],
-                        stop: values[1],
-                        strength_a: values[2],
-                        strength_b: values[3],
-                        frequency: values[4],
-                        period: values[5],
-                    };
-                }
-                "Vibration" => {
-                    let values = get_input_values(&input_grid);
-                    new_effect = TriggerEffect::Vibration {
-                        position: values[0],
-                        amplitude: values[1],
-                        frequency: values[2],
-                    };
-                }
-                "FeedbackRaw" => {
-                    let values = get_input_values(&input_grid);
-                    let strength = values.try_into().unwrap_or([0; 10]);
-                    new_effect = TriggerEffect::FeedbackRaw { strength };
-                }
-                "VibrationRaw" => {
-                    let values = get_input_values(&input_grid);
-                    let amplitude = values[..10].try_into().unwrap_or([0; 10]);
-                    new_effect = TriggerEffect::VibrationRaw {
-                        amplitude,
-                        frequency: values[10],
-                    };
-                }
-                "Mode" => {
-                    let params = get_input_strings(&input_grid);
-                    new_effect = TriggerEffect::Mode { params };
                 }
                 _ => {}
             }
@@ -612,7 +810,6 @@ fn create_trigger_controls(
         }
     });
 
-    // Add widgets to the grid
     grid.attach(&Label::new(Some("Trigger Effect:")), 0, 0, 1, 1);
     grid.attach(&effect_dropdown, 1, 0, 2, 1);
     grid.attach(&input_grid, 0, 1, 3, 1);
@@ -621,7 +818,6 @@ fn create_trigger_controls(
     grid
 }
 
-// Helper to clear all widgets in a grid
 fn clear_grid(grid: &Grid) {
     let mut child = grid.first_child();
     while let Some(widget) = child {
@@ -630,56 +826,72 @@ fn clear_grid(grid: &Grid) {
     }
 }
 
-// Helper to create numeric input fields
 fn create_input_fields(grid: &Grid, labels: &[&str]) {
     for (i, &label) in labels.iter().enumerate() {
-        let entry = Entry::builder()
-            .input_purpose(gtk::InputPurpose::Digits)
-            .hexpand(true)
-            .build();
+        if label == "Params [1..=9]" {
+            let side_dropdown = DropDown::builder()
+                .model(&gtk::StringList::new(&["left", "right", "both"]))
+                .selected(2)
+                .build();
 
-        grid.attach(&Label::new(Some(label)), 0, i as i32, 1, 1);
-        grid.attach(&entry, 1, i as i32, 2, 1);
-    }
-    grid.show();
-}
+            let params_entry = Entry::builder()
+                .input_purpose(gtk::InputPurpose::Digits)
+                .tooltip_text(
+                    "Enter up to 9 comma-separated values (0-255), e.g., 255,127,6,0,0,20,0,0,0",
+                )
+                .hexpand(true)
+                .build();
 
-// Helper to get numeric values from input fields
-// Helper to get numeric values from input fields
-fn get_input_values(grid: &Grid) -> Vec<u8> {
-    let mut values = Vec::new();
-    let mut child = grid.first_child();
+            params_entry.set_text("0,0,0,0,0,0,0,0,0");
 
-    while let Some(widget) = child {
-        if let Some(entry) = widget.downcast_ref::<Entry>() {
-            if let Ok(value) = entry.text().parse::<u8>() {
-                values.push(value);
-            }
+            params_entry.connect_changed(|entry| {
+                let text = entry.text();
+                let is_valid = validate_comma_separated_input_up_to_9(&text);
+                if is_valid {
+                    entry.set_css_classes(&[]);
+                } else {
+                    entry.set_css_classes(&["error"]);
+                }
+            });
+
+            grid.attach(&Label::new(Some("Side")), 0, i as i32, 1, 1);
+            grid.attach(&side_dropdown, 1, i as i32, 1, 1);
+            grid.attach(&Label::new(Some(label)), 0, (i + 1) as i32, 1, 1);
+            grid.attach(&params_entry, 1, (i + 1) as i32, 2, 1);
+        } else if label.contains("[10]") {
+            let entry = Entry::builder()
+                .input_purpose(gtk::InputPurpose::Digits)
+                .tooltip_text("Enter exactly 10 comma-separated values (0-255), e.g., 0,0,215,0,0,0,125,10,0,0")
+                .hexpand(true)
+                .build();
+
+            entry.set_text("0,0,0,0,0,0,0,0,0,0");
+
+            entry.connect_changed(|entry| {
+                let text = entry.text();
+                let is_valid = validate_comma_separated_input_exact_10(&text);
+                if is_valid {
+                    entry.set_css_classes(&[]);
+                } else {
+                    entry.set_css_classes(&["error"]);
+                }
+            });
+
+            grid.attach(&Label::new(Some(label)), 0, i as i32, 1, 1);
+            grid.attach(&entry, 1, i as i32, 2, 1);
+        } else {
+            let entry = Entry::builder()
+                .input_purpose(gtk::InputPurpose::Digits)
+                .hexpand(true)
+                .build();
+
+            entry.set_text("0");
+            grid.attach(&Label::new(Some(label)), 0, i as i32, 1, 1);
+            grid.attach(&entry, 1, i as i32, 2, 1);
         }
-        child = widget.next_sibling(); // Move to the next child
     }
 
-    values
-}
-
-// Helper to get string values from input fields
-fn get_input_strings(grid: &Grid) -> Vec<String> {
-    let mut values = Vec::new();
-    let mut child = grid.first_child();
-
-    while let Some(widget) = child {
-        if let Some(entry) = widget.downcast_ref::<Entry>() {
-            values.push(entry.text().to_string());
-        }
-        child = widget.next_sibling(); // Move to the next child
-    }
-
-    values
-}
-
-// Mock function to simulate applying trigger changes
-fn change_triggers(trigger: &Trigger) {
-    println!("Applied trigger: {:?}", trigger.effect);
+    grid.set_visible(true);
 }
 
 //////////////////////////////////////////////////////////
@@ -688,6 +900,28 @@ fn change_triggers(trigger: &Trigger) {
 
 pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> ApplicationWindow {
     let controller_state = load_state();
+
+    let stack = gtk::Stack::builder()
+        .transition_type(gtk::StackTransitionType::SlideLeftRight)
+        .transition_duration(300)
+        .build();
+
+    let stack_switcher = gtk::StackSwitcher::builder()
+        .stack(&stack)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    let main_controls_box = Box::builder()
+        .orientation(Orientation::Vertical)
+        .spacing(10)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
 
     let battery_box = create_labeled_level_bar(
         "Battery",
@@ -731,34 +965,17 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
     settings_grid.attach(&Label::new(Some("Triggers")), 0, 12, 2, 1);
     settings_grid.attach(&trigger_controls_grid, 0, 13, 2, 1);
 
-    let save_button = Button::builder()
-        .label("Save")
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .build();
+    main_controls_box.append(&settings_grid);
 
-    let refresh_button = Button::builder()
-        .label("Refresh")
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .build();
+    stack.add_titled(&main_controls_box, Some("main"), "Settings");
 
-    let optsbox = Box::builder()
-        .orientation(Orientation::Horizontal)
-        .spacing(10)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .build();
-    optsbox.append(&save_button);
-    optsbox.append(&refresh_button);
+    let presets_page = create_presets_page(&mut Arc::clone(&controller));
+    stack.add_titled(&presets_page, Some("presets"), "Presets");
 
-    let box_main = Box::builder()
+    let profiles_page = create_profiles_page();
+    stack.add_titled(&profiles_page, Some("profiles"), "Profiles");
+
+    let main_box = Box::builder()
         .orientation(Orientation::Vertical)
         .spacing(10)
         .margin_top(12)
@@ -766,13 +983,15 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
         .margin_start(12)
         .margin_end(12)
         .build();
-    box_main.append(&settings_grid);
-    box_main.append(&optsbox);
+    main_box.append(&stack_switcher);
+    main_box.append(&stack);
 
     let window = ApplicationWindow::builder()
         .application(app)
         .title("Dualsensectl GUI")
-        .child(&box_main)
+        .child(&main_box)
+        .default_width(600)
+        .default_height(400)
         .build();
 
     window.connect_close_request({
