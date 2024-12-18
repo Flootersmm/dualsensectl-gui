@@ -5,13 +5,13 @@ use std::thread;
 use crate::dualsensectl::*;
 use crate::gui::utils::*;
 use crate::save::*;
-use crate::structs::{Controller, Speaker};
+use crate::structs::*;
 
 use gtk::glib::Propagation;
 use gtk::prelude::*;
 use gtk::{
     Adjustment, Application, ApplicationWindow, Box, Button, ColorDialog, ColorDialogButton,
-    DropDown, Grid, Label, Orientation, Scale, Switch,
+    ComboBoxText, DropDown, Entry, Grid, Label, Orientation, Scale, Switch,
 };
 
 // TODO: Also make .desktop
@@ -390,19 +390,11 @@ fn create_attenuation_controls(
         move |_| {
             let attenuation_rumble = attenuation_rumble_dropdown.selected() as u8;
 
-            let mut attenuation = vec![0; 2];
-            attenuation[0] = attenuation_rumble;
-
-            ////////
-            ////////
-            // TODO: attenuation as Vec<u8> with 2 elements, use two dropdowns for the fields and
-            // combine
-            ////////
-
             let controller_clone = Arc::clone(&controller);
             thread::spawn(move || {
                 if let Ok(mut ctrl) = controller_clone.lock() {
-                    change_attenuation_amount(attenuation, &mut ctrl);
+                    ctrl.attenuation[0] = attenuation_rumble;
+                    change_attenuation_amount(ctrl.attenuation.clone(), &mut ctrl);
                     if let Err(err) = save_state(&*ctrl) {
                         eprintln!("Failed to save controller state: {}", err);
                     }
@@ -419,17 +411,11 @@ fn create_attenuation_controls(
         move |_| {
             let attenuation_trigger = attenuation_trigger_dropdown.selected() as u8;
 
-            let mut attenuation = vec![0; 2];
-            attenuation[1] = attenuation_trigger;
-
-            ////////
-            // TOOD: attenuations should be linked to struct
-            ////////
-            //
             let controller_clone = Arc::clone(&controller);
             thread::spawn(move || {
                 if let Ok(mut ctrl) = controller_clone.lock() {
-                    change_attenuation_amount(attenuation, &mut ctrl);
+                    ctrl.attenuation[1] = attenuation_trigger;
+                    change_attenuation_amount(ctrl.attenuation.clone(), &mut ctrl);
                     if let Err(err) = save_state(&*ctrl) {
                         eprintln!("Failed to save controller state: {}", err);
                     }
@@ -446,11 +432,12 @@ fn create_attenuation_controls(
     grid
 }
 
+// Main function to create the trigger controls
 fn create_trigger_controls(
     controller: Arc<Mutex<Controller>>,
     controller_state: &Controller,
 ) -> Grid {
-    let grid = gtk::Grid::builder()
+    let grid = Grid::builder()
         .row_spacing(6)
         .column_spacing(10)
         .margin_top(12)
@@ -459,37 +446,240 @@ fn create_trigger_controls(
         .margin_end(12)
         .build();
 
-    let trigger_items = gtk::StringList::new(&["0", "1", "2", "3", "4", "5"]);
+    // Dropdown for selecting the TriggerEffect type
+    let trigger_effects = vec![
+        "Off",
+        "Feedback",
+        "Weapon",
+        "Bow",
+        "Galloping",
+        "Machine",
+        "Vibration",
+        "FeedbackRaw",
+        "VibrationRaw",
+        "Mode",
+    ];
 
-    let trigger_dropdown = DropDown::builder()
-        .model(&trigger_items)
-        .selected(1)
+    let effect_dropdown = ComboBoxText::builder().hexpand(true).build();
+
+    for effect in &trigger_effects {
+        effect_dropdown.append(Some(effect), effect);
+    }
+
+    // Set the current value based on the controller state
+    effect_dropdown.set_active_id(Some(&format!("{:?}", controller_state.trigger.effect)));
+
+    // Grid for dynamic input fields
+    let input_grid = Grid::builder().row_spacing(6).column_spacing(10).build();
+
+    // Apply button
+    let apply_button = Button::builder()
+        .label("Apply")
+        .halign(gtk::Align::End)
         .build();
 
-    trigger_dropdown.connect_selected_notify({
-        let controller = Arc::clone(&controller);
-        let trigger_dropdown = trigger_dropdown.clone();
-        move |_| {
-            let trigger = trigger_dropdown.selected() as u8;
+    // Handle dropdown change
+    effect_dropdown.connect_changed({
+        let input_grid = input_grid.clone();
+        move |dropdown| {
+            clear_grid(&input_grid);
 
-            let controller_clone = Arc::clone(&controller);
-            thread::spawn(move || {
-                if let Ok(mut ctrl) = controller_clone.lock() {
-                    change_trigger(&mut ctrl);
-                    if let Err(err) = save_state(&*ctrl) {
-                        eprintln!("Failed to save controller state: {}", err);
-                    }
-                } else {
-                    eprintln!("Failed to lock controller for player LED change.");
+            let selected = dropdown.active_id().unwrap_or_else(|| "Off".into());
+
+            match selected.as_str() {
+                "Feedback" => create_input_fields(&input_grid, &["Position", "Strength"]),
+                "Weapon" => create_input_fields(&input_grid, &["Start", "Stop", "Strength"]),
+                "Bow" => {
+                    create_input_fields(&input_grid, &["Start", "Stop", "Strength", "Snapforce"])
                 }
-            });
+                "Galloping" => create_input_fields(
+                    &input_grid,
+                    &["Start", "Stop", "First Foot", "Second Foot", "Frequency"],
+                ),
+                "Machine" => create_input_fields(
+                    &input_grid,
+                    &[
+                        "Start",
+                        "Stop",
+                        "Strength A",
+                        "Strength B",
+                        "Frequency",
+                        "Period",
+                    ],
+                ),
+                "Vibration" => {
+                    create_input_fields(&input_grid, &["Position", "Amplitude", "Frequency"])
+                }
+                "FeedbackRaw" => create_input_fields(&input_grid, &["Strength [10]"]),
+                "VibrationRaw" => {
+                    create_input_fields(&input_grid, &["Amplitude [10]", "Frequency"])
+                }
+                "Mode" => create_input_fields(&input_grid, &["Params"]),
+                _ => {} // No inputs for "Off"
+            }
         }
     });
 
-    grid.attach(&Label::new(Some("Triggers")), 0, 0, 1, 1);
-    grid.attach(&trigger_dropdown, 1, 0, 1, 1);
+    // Handle Apply button click
+    apply_button.connect_clicked({
+        let controller_clone = Arc::clone(&controller);
+        let effect_dropdown = effect_dropdown.clone();
+        let input_grid = input_grid.clone();
+
+        move |_| {
+            let selected = effect_dropdown.active_id().unwrap_or_else(|| "Off".into());
+            let mut new_effect = TriggerEffect::Off;
+
+            match selected.as_str() {
+                "Feedback" => {
+                    let values = get_input_values(&input_grid);
+                    new_effect = TriggerEffect::Feedback {
+                        position: values[0],
+                        strength: values[1],
+                    };
+                }
+                "Weapon" => {
+                    let values = get_input_values(&input_grid);
+                    new_effect = TriggerEffect::Weapon {
+                        start: values[0],
+                        stop: values[1],
+                        strength: values[2],
+                    };
+                }
+                "Bow" => {
+                    let values = get_input_values(&input_grid);
+                    new_effect = TriggerEffect::Bow {
+                        start: values[0],
+                        stop: values[1],
+                        strength: values[2],
+                        snapforce: values[3],
+                    };
+                }
+                "Galloping" => {
+                    let values = get_input_values(&input_grid);
+                    new_effect = TriggerEffect::Galloping {
+                        start: values[0],
+                        stop: values[1],
+                        first_foot: values[2],
+                        second_foot: values[3],
+                        frequency: values[4],
+                    };
+                }
+                "Machine" => {
+                    let values = get_input_values(&input_grid);
+                    new_effect = TriggerEffect::Machine {
+                        start: values[0],
+                        stop: values[1],
+                        strength_a: values[2],
+                        strength_b: values[3],
+                        frequency: values[4],
+                        period: values[5],
+                    };
+                }
+                "Vibration" => {
+                    let values = get_input_values(&input_grid);
+                    new_effect = TriggerEffect::Vibration {
+                        position: values[0],
+                        amplitude: values[1],
+                        frequency: values[2],
+                    };
+                }
+                "FeedbackRaw" => {
+                    let values = get_input_values(&input_grid);
+                    let strength = values.try_into().unwrap_or([0; 10]);
+                    new_effect = TriggerEffect::FeedbackRaw { strength };
+                }
+                "VibrationRaw" => {
+                    let values = get_input_values(&input_grid);
+                    let amplitude = values[..10].try_into().unwrap_or([0; 10]);
+                    new_effect = TriggerEffect::VibrationRaw {
+                        amplitude,
+                        frequency: values[10],
+                    };
+                }
+                "Mode" => {
+                    let params = get_input_strings(&input_grid);
+                    new_effect = TriggerEffect::Mode { params };
+                }
+                _ => {}
+            }
+
+            if let Ok(mut ctrl) = controller_clone.lock() {
+                ctrl.trigger.effect = new_effect;
+                println!("Updated trigger: {:?}", ctrl.trigger);
+                change_triggers(&ctrl.trigger);
+            }
+        }
+    });
+
+    // Add widgets to the grid
+    grid.attach(&Label::new(Some("Trigger Effect:")), 0, 0, 1, 1);
+    grid.attach(&effect_dropdown, 1, 0, 2, 1);
+    grid.attach(&input_grid, 0, 1, 3, 1);
+    grid.attach(&apply_button, 2, 2, 1, 1);
 
     grid
+}
+
+// Helper to clear all widgets in a grid
+fn clear_grid(grid: &Grid) {
+    let mut child = grid.first_child();
+    while let Some(widget) = child {
+        child = widget.next_sibling();
+        grid.remove(&widget);
+    }
+}
+
+// Helper to create numeric input fields
+fn create_input_fields(grid: &Grid, labels: &[&str]) {
+    for (i, &label) in labels.iter().enumerate() {
+        let entry = Entry::builder()
+            .input_purpose(gtk::InputPurpose::Digits)
+            .hexpand(true)
+            .build();
+
+        grid.attach(&Label::new(Some(label)), 0, i as i32, 1, 1);
+        grid.attach(&entry, 1, i as i32, 2, 1);
+    }
+    grid.show();
+}
+
+// Helper to get numeric values from input fields
+// Helper to get numeric values from input fields
+fn get_input_values(grid: &Grid) -> Vec<u8> {
+    let mut values = Vec::new();
+    let mut child = grid.first_child();
+
+    while let Some(widget) = child {
+        if let Some(entry) = widget.downcast_ref::<Entry>() {
+            if let Ok(value) = entry.text().parse::<u8>() {
+                values.push(value);
+            }
+        }
+        child = widget.next_sibling(); // Move to the next child
+    }
+
+    values
+}
+
+// Helper to get string values from input fields
+fn get_input_strings(grid: &Grid) -> Vec<String> {
+    let mut values = Vec::new();
+    let mut child = grid.first_child();
+
+    while let Some(widget) = child {
+        if let Some(entry) = widget.downcast_ref::<Entry>() {
+            values.push(entry.text().to_string());
+        }
+        child = widget.next_sibling(); // Move to the next child
+    }
+
+    values
+}
+
+// Mock function to simulate applying trigger changes
+fn change_triggers(trigger: &Trigger) {
+    println!("Applied trigger: {:?}", trigger.effect);
 }
 
 //////////////////////////////////////////////////////////
@@ -516,6 +706,7 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
     let speaker_controls_grid = create_speaker_controls(Arc::clone(&controller), &controller_state);
     let attenuation_controls_grid =
         create_attenuation_controls(Arc::clone(&controller), &controller_state);
+    let trigger_controls_grid = create_trigger_controls(Arc::clone(&controller), &controller_state);
 
     let settings_grid = gtk::Grid::builder()
         .row_spacing(10)
@@ -538,6 +729,7 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
     settings_grid.attach(&Label::new(Some("Attenuation")), 0, 10, 2, 1);
     settings_grid.attach(&attenuation_controls_grid, 0, 11, 2, 1);
     settings_grid.attach(&Label::new(Some("Triggers")), 0, 12, 2, 1);
+    settings_grid.attach(&trigger_controls_grid, 0, 13, 2, 1);
 
     let save_button = Button::builder()
         .label("Save")
