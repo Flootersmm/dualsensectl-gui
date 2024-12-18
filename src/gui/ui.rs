@@ -30,11 +30,8 @@ fn create_lightbar_controls(
     let grid = gtk::Grid::builder()
         .row_spacing(6)
         .column_spacing(10)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
         .build();
+    set_margins(&grid, 12);
 
     let lightbar_switch = Switch::new();
     lightbar_switch.set_margin_top(6);
@@ -171,11 +168,8 @@ fn create_microphone_controls(
     let grid = gtk::Grid::builder()
         .row_spacing(6)
         .column_spacing(10)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
         .build();
+    set_margins(&grid, 12);
 
     let microphone_switch = Switch::new();
     microphone_switch.set_margin_top(6);
@@ -183,6 +177,7 @@ fn create_microphone_controls(
     microphone_switch.set_active(controller_state.microphone);
     microphone_switch.set_hexpand(false);
     microphone_switch.set_halign(gtk::Align::Center);
+
     let microphone_led_switch = Switch::new();
     microphone_led_switch.set_margin_top(6);
     microphone_led_switch.set_margin_bottom(12);
@@ -258,11 +253,8 @@ fn create_playerleds_controls(
     let grid = gtk::Grid::builder()
         .row_spacing(6)
         .column_spacing(10)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
         .build();
+    set_margins(&grid, 12);
 
     let playerleds_items = gtk::StringList::new(&["0", "1", "2", "3", "4", "5"]);
 
@@ -304,13 +296,10 @@ fn create_speaker_controls(
     let grid = gtk::Grid::builder()
         .row_spacing(6)
         .column_spacing(10)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
         .build();
+    set_margins(&grid, 12);
 
-    let speaker_item = gtk::StringList::new(&["Internal", "Headphones", "Both"]);
+    let speaker_item = gtk::StringList::new(&["Internal", "Headphones", "Mono Headphones", "Both"]);
 
     let speaker_dropdown = DropDown::builder()
         .model(&speaker_item)
@@ -324,7 +313,8 @@ fn create_speaker_controls(
             let speaker = match speaker_dropdown.selected() {
                 0 => Speaker::Internal,
                 1 => Speaker::Headphone,
-                2 => Speaker::Both,
+                2 => Speaker::Monoheadphone,
+                3 => Speaker::Both,
                 _ => Speaker::Internal,
             };
 
@@ -389,11 +379,8 @@ fn create_attenuation_controls(
     let grid = gtk::Grid::builder()
         .row_spacing(6)
         .column_spacing(10)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
         .build();
+    set_margins(&grid, 12);
 
     let attenuation_items = gtk::StringList::new(&["0", "1", "2", "3", "4", "5", "6", "7"]);
 
@@ -463,11 +450,8 @@ fn create_trigger_controls(
         .column_homogeneous(true)
         .row_spacing(6)
         .column_spacing(10)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
         .build();
+    set_margins(&grid, 12);
 
     let trigger_effects = Arc::new(vec![
         "Off",
@@ -906,22 +890,14 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
         .transition_duration(300)
         .build();
 
-    let stack_switcher = gtk::StackSwitcher::builder()
-        .stack(&stack)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
-        .build();
+    let stack_switcher = gtk::StackSwitcher::builder().stack(&stack).build();
+    set_margins(&stack_switcher, 12);
 
     let main_controls_box = Box::builder()
         .orientation(Orientation::Vertical)
         .spacing(10)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
         .build();
+    set_margins(&main_controls_box, 12);
 
     let battery_box = create_labeled_level_bar(
         "Battery",
@@ -945,11 +921,8 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
     let settings_grid = gtk::Grid::builder()
         .row_spacing(10)
         .column_spacing(20)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
         .build();
+    set_margins(&settings_grid, 12);
 
     settings_grid.attach(&battery_box, 0, 0, 1, 1);
     settings_grid.attach(&Label::new(Some("Lightbar Controls")), 0, 1, 2, 1);
@@ -978,11 +951,8 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
     let main_box = Box::builder()
         .orientation(Orientation::Vertical)
         .spacing(10)
-        .margin_top(12)
-        .margin_bottom(12)
-        .margin_start(12)
-        .margin_end(12)
         .build();
+    set_margins(&main_box, 12);
     main_box.append(&stack_switcher);
     main_box.append(&stack);
 

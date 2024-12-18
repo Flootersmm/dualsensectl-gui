@@ -225,6 +225,7 @@ pub fn get_field_constraints() -> HashMap<String, FieldConstraint> {
 
     constraints
 }
+
 fn validate_input(entry: &Entry, constraint: &FieldConstraint, popover: &Popover) -> bool {
     let text = entry.text();
     let is_valid = text.split(',').all(|v| {
@@ -244,6 +245,7 @@ fn validate_input(entry: &Entry, constraint: &FieldConstraint, popover: &Popover
         entry.set_css_classes(&[]);
         popover.set_visible(false);
     }
+
     is_valid
 }
 
@@ -285,6 +287,7 @@ pub fn create_validated_input_field(
 
     entry
 }
+
 pub fn create_labeled_level_bar(
     label_text: &str,
     initial_value: f64,
@@ -363,6 +366,7 @@ pub fn create_labeled_button(label_text: &str) -> (Box, Button) {
 
     (box_with_label, button)
 }
+
 pub fn create_labeled_switch(label_text: &str, active: bool) -> (Box, Switch) {
     let label = Label::new(Some(label_text));
     let switch = Switch::new();

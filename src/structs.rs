@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+/// Controller state
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Controller {
     pub lightbar_colour: Vec<u8>,
@@ -14,6 +15,9 @@ pub struct Controller {
     pub trigger: Trigger,
 }
 
+/// Sensible defaults for a controller
+///
+/// Used when we find no saved profile
 impl Default for Controller {
     fn default() -> Self {
         Self {
@@ -23,7 +27,7 @@ impl Default for Controller {
             playerleds: 1,
             microphone: false,
             microphone_led: false,
-            speaker: Speaker::Internal,
+            speaker: Speaker::default(),
             volume: 0,
             attenuation: vec![0, 0],
             trigger: Trigger::default(),
@@ -31,18 +35,22 @@ impl Default for Controller {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-#[derive(Default)]
+/// Speaker mode enum
+///
+/// Default Internal
+#[derive(Debug, Serialize, Deserialize, Default)]
 pub enum Speaker {
     #[default]
     Internal,
     Headphone,
+    Monoheadphone,
     Both,
 }
 
-
-#[derive(Debug, Serialize, Deserialize)]
-#[derive(Default)]
+/// Trigger modes with varying fields
+///
+/// Default Off
+#[derive(Debug, Serialize, Deserialize, Default)]
 pub enum TriggerEffect {
     #[default]
     Off,
@@ -93,7 +101,7 @@ pub enum TriggerEffect {
     },
 }
 
-
+/// Trigger struct with mode string and params
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Trigger {
     pub side: String,
@@ -101,6 +109,7 @@ pub struct Trigger {
 }
 
 impl Default for Trigger {
+    /// Trigger struct default, disables both
     fn default() -> Self {
         Trigger {
             side: "both".to_string(),
@@ -110,6 +119,7 @@ impl Default for Trigger {
 }
 
 impl Trigger {
+    /// Trigger struct to dualsensectl command string
     pub fn to_command(&self) -> String {
         match &self.effect {
             TriggerEffect::Off => format!("trigger {} off", self.side),
