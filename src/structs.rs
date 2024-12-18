@@ -32,20 +32,19 @@ impl Default for Controller {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+#[derive(Default)]
 pub enum Speaker {
+    #[default]
     Internal,
     Headphone,
     Both,
 }
 
-impl Default for Speaker {
-    fn default() -> Self {
-        Speaker::Internal
-    }
-}
 
 #[derive(Debug, Serialize, Deserialize)]
+#[derive(Default)]
 pub enum TriggerEffect {
+    #[default]
     Off,
     Feedback {
         position: u8,
@@ -94,11 +93,6 @@ pub enum TriggerEffect {
     },
 }
 
-impl Default for TriggerEffect {
-    fn default() -> Self {
-        TriggerEffect::Off
-    }
-}
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Trigger {

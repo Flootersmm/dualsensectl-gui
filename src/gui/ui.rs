@@ -50,7 +50,7 @@ fn create_lightbar_controls(
             thread::spawn(move || {
                 if let Ok(mut ctrl) = controller_clone_inner.lock() {
                     toggle_lightbar(state, &mut ctrl);
-                    if let Err(err) = save_state(&*ctrl) {
+                    if let Err(err) = save_state(&ctrl) {
                         eprintln!("Failed to save controller state: {}", err);
                     }
                 } else {
@@ -198,7 +198,7 @@ fn create_microphone_controls(
         thread::spawn(move || {
             if let Ok(mut ctrl) = controller_clone.lock() {
                 toggle_microphone(&mut ctrl);
-                if let Err(err) = save_state(&*ctrl) {
+                if let Err(err) = save_state(&ctrl) {
                     eprintln!("Failed to save controller state: {}", err);
                 }
             } else {
@@ -213,7 +213,7 @@ fn create_microphone_controls(
         thread::spawn(move || {
             if let Ok(mut ctrl) = controller_clone.lock() {
                 toggle_microphone_led(&mut ctrl);
-                if let Err(err) = save_state(&*ctrl) {
+                if let Err(err) = save_state(&ctrl) {
                     eprintln!("Failed to save controller state: {}", err);
                 }
             } else {
@@ -281,7 +281,7 @@ fn create_playerleds_controls(
             thread::spawn(move || {
                 if let Ok(mut ctrl) = controller_clone.lock() {
                     change_playerleds_amount(playerleds, &mut ctrl);
-                    if let Err(err) = save_state(&*ctrl) {
+                    if let Err(err) = save_state(&ctrl) {
                         eprintln!("Failed to save controller state: {}", err);
                     }
                 } else {
@@ -332,7 +332,7 @@ fn create_speaker_controls(
             thread::spawn(move || {
                 if let Ok(mut ctrl) = controller_clone.lock() {
                     toggle_speaker(speaker, &mut ctrl);
-                    if let Err(err) = save_state(&*ctrl) {
+                    if let Err(err) = save_state(&ctrl) {
                         eprintln!("Failed to save controller state: {}", err);
                     }
                 } else {
@@ -367,7 +367,7 @@ fn create_speaker_controls(
         thread::spawn(move || {
             if let Ok(mut ctrl) = controller_clone.lock() {
                 change_volume(volume, &mut ctrl);
-                if let Err(err) = save_state(&*ctrl) {
+                if let Err(err) = save_state(&ctrl) {
                     eprintln!("Failed to save controller state: {}", err);
                 }
             } else {
@@ -418,7 +418,7 @@ fn create_attenuation_controls(
                 if let Ok(mut ctrl) = controller_clone.lock() {
                     ctrl.attenuation[0] = attenuation_rumble;
                     change_attenuation_amount(ctrl.attenuation.clone(), &mut ctrl);
-                    if let Err(err) = save_state(&*ctrl) {
+                    if let Err(err) = save_state(&ctrl) {
                         eprintln!("Failed to save controller state: {}", err);
                     }
                 } else {
@@ -439,7 +439,7 @@ fn create_attenuation_controls(
                 if let Ok(mut ctrl) = controller_clone.lock() {
                     ctrl.attenuation[1] = attenuation_trigger;
                     change_attenuation_amount(ctrl.attenuation.clone(), &mut ctrl);
-                    if let Err(err) = save_state(&*ctrl) {
+                    if let Err(err) = save_state(&ctrl) {
                         eprintln!("Failed to save controller state: {}", err);
                     }
                 } else {
@@ -787,14 +787,14 @@ fn create_trigger_controls(
                 "Feedback" => {
                     let values = get_input_values(&input_grid);
                     new_effect = TriggerEffect::Feedback {
-                        position: values.get(0).cloned().unwrap_or_default(),
+                        position: values.first().cloned().unwrap_or_default(),
                         strength: values.get(1).cloned().unwrap_or_default(),
                     };
                 }
                 "Weapon" => {
                     let values = get_input_values(&input_grid);
                     new_effect = TriggerEffect::Weapon {
-                        start: values.get(0).cloned().unwrap_or_default(),
+                        start: values.first().cloned().unwrap_or_default(),
                         stop: values.get(1).cloned().unwrap_or_default(),
                         strength: values.get(2).cloned().unwrap_or_default(),
                     };
@@ -969,7 +969,7 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
 
     stack.add_titled(&main_controls_box, Some("main"), "Settings");
 
-    let presets_page = create_presets_page(&mut Arc::clone(&controller));
+    let presets_page = create_presets_page(&Arc::clone(&controller));
     stack.add_titled(&presets_page, Some("presets"), "Presets");
 
     let profiles_page = create_profiles_page();

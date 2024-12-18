@@ -21,7 +21,7 @@ use gtk::prelude::*;
 use gtk::Application;
 
 const APP_ID: &str = "org.gtk_rs.Dualsensectl";
-const MAX_LOG_SIZE: usize = 1 * 1024 * 1024; // 1 MB
+const MAX_LOG_SIZE: usize = 1024 * 1024; // 1 MB
 
 // ~/.local/share/dualsensectl-gui/logs/dualsensectl.log
 fn get_log_path() -> std::path::PathBuf {
