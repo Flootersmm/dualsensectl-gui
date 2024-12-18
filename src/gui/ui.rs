@@ -5,7 +5,7 @@ use std::thread;
 use crate::dualsensectl::*;
 use crate::gui::utils::*;
 use crate::save::*;
-use crate::structs::Controller;
+use crate::structs::{Controller, Speaker};
 
 use gtk::glib::Propagation;
 use gtk::prelude::*;
@@ -14,11 +14,12 @@ use gtk::{
     DropDown, Grid, Label, Orientation, Scale, Switch,
 };
 
+// TODO: Also make .desktop
+
 //////////////////////////////////////////////////////////
 // Utility Functions
 //////////////////////////////////////////////////////////
 
-/// Creates and manages the lightbar controls (color and brightness).
 fn create_lightbar_controls(
     controller: Arc<Mutex<Controller>>,
     controller_state: &Controller,
@@ -141,6 +142,93 @@ fn create_lightbar_controls(
     grid
 }
 
+fn create_microphone_controls(
+    controller: Arc<Mutex<Controller>>,
+    controller_state: &Controller,
+) -> Grid {
+    let grid = gtk::Grid::builder()
+        .row_spacing(6)
+        .column_spacing(10)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    let microphone_switch = Switch::new();
+    microphone_switch.set_margin_top(6);
+    microphone_switch.set_margin_bottom(12);
+    microphone_switch.set_active(controller_state.microphone);
+    microphone_switch.set_hexpand(false);
+    microphone_switch.set_halign(gtk::Align::Center);
+    let microphone_led_switch = Switch::new();
+    microphone_led_switch.set_margin_top(6);
+    microphone_led_switch.set_margin_bottom(12);
+    microphone_led_switch.set_active(controller_state.microphone_led);
+    microphone_led_switch.set_hexpand(false);
+    microphone_led_switch.set_halign(gtk::Align::Center);
+
+    let controller_clone_1 = Arc::clone(&controller);
+    let controller_clone_2 = Arc::clone(&controller);
+
+    microphone_switch.connect_state_set(move |_, _| {
+        let controller_clone = Arc::clone(&controller_clone_1);
+        thread::spawn(move || {
+            if let Ok(mut ctrl) = controller_clone.lock() {
+                toggle_microphone(&mut ctrl);
+                if let Err(err) = save_state(&*ctrl) {
+                    eprintln!("Failed to save controller state: {}", err);
+                }
+            } else {
+                eprintln!("Failed to lock controller for microphone toggle.");
+            }
+        });
+        Propagation::Proceed
+    });
+
+    microphone_led_switch.connect_state_set(move |_, _| {
+        let controller_clone = Arc::clone(&controller_clone_2);
+        thread::spawn(move || {
+            if let Ok(mut ctrl) = controller_clone.lock() {
+                toggle_microphone_led(&mut ctrl);
+                if let Err(err) = save_state(&*ctrl) {
+                    eprintln!("Failed to save controller state: {}", err);
+                }
+            } else {
+                eprintln!("Failed to lock controller for microphone led toggle.");
+            }
+        });
+        Propagation::Proceed
+    });
+
+    grid.attach(
+        &{
+            let label = Label::new(Some("Enabled"));
+            label.set_halign(gtk::Align::Start);
+            label
+        },
+        0,
+        0,
+        1,
+        1,
+    );
+    grid.attach(&microphone_switch, 1, 0, 1, 1);
+    grid.attach(
+        &{
+            let label = Label::new(Some("Microphone LED"));
+            label.set_halign(gtk::Align::Start);
+            label
+        },
+        0,
+        1,
+        1,
+        1,
+    );
+    grid.attach(&microphone_led_switch, 1, 1, 1, 1);
+
+    grid
+}
+
 /// Creates and manages the player LED controls (dropdown).
 fn create_playerleds_controls(
     controller: Arc<Mutex<Controller>>,
@@ -188,6 +276,222 @@ fn create_playerleds_controls(
     grid
 }
 
+fn create_speaker_controls(
+    controller: Arc<Mutex<Controller>>,
+    controller_state: &Controller,
+) -> Grid {
+    let grid = gtk::Grid::builder()
+        .row_spacing(6)
+        .column_spacing(10)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    let speaker_item = gtk::StringList::new(&["Internal", "Headphones", "Both"]);
+
+    let speaker_dropdown = DropDown::builder()
+        .model(&speaker_item)
+        .selected(controller_state.playerleds.into())
+        .build();
+
+    speaker_dropdown.connect_selected_notify({
+        let controller = Arc::clone(&controller);
+        let speaker_dropdown = speaker_dropdown.clone();
+        move |_| {
+            let speaker = match speaker_dropdown.selected() {
+                0 => Speaker::Internal,
+                1 => Speaker::Headphone,
+                2 => Speaker::Both,
+                _ => Speaker::Internal,
+            };
+
+            let controller_clone = Arc::clone(&controller);
+            thread::spawn(move || {
+                if let Ok(mut ctrl) = controller_clone.lock() {
+                    toggle_speaker(speaker, &mut ctrl);
+                    if let Err(err) = save_state(&*ctrl) {
+                        eprintln!("Failed to save controller state: {}", err);
+                    }
+                } else {
+                    eprintln!("Failed to lock controller for speaker change.");
+                }
+            });
+        }
+    });
+
+    let volume_adjustment = Adjustment::new(
+        controller_state.lightbar_colour[3] as f64,
+        0.0,
+        255.0,
+        1.0,
+        10.0,
+        0.0,
+    );
+
+    let volume_slider = Scale::builder()
+        .orientation(gtk::Orientation::Horizontal)
+        .adjustment(&volume_adjustment)
+        .value_pos(gtk::PositionType::Right)
+        .hexpand_set(true)
+        .build();
+
+    let controller_clone_2 = Arc::clone(&controller);
+    let volume = volume_adjustment.value().round() as u8;
+    volume_slider.connect_value_changed(move |_| {
+        let controller_clone = Arc::clone(&controller_clone_2);
+        thread::spawn(move || {
+            if let Ok(mut ctrl) = controller_clone.lock() {
+                change_volume(volume, &mut ctrl);
+                if let Err(err) = save_state(&*ctrl) {
+                    eprintln!("Failed to save controller state: {}", err);
+                }
+            } else {
+                eprintln!("Failed to lock controller for volume change.");
+            }
+        });
+    });
+
+    grid.attach(&speaker_dropdown, 0, 0, 1, 1);
+    grid.attach(&volume_slider, 1, 0, 6, 1);
+
+    grid
+}
+
+fn create_attenuation_controls(
+    controller: Arc<Mutex<Controller>>,
+    controller_state: &Controller,
+) -> Grid {
+    let grid = gtk::Grid::builder()
+        .row_spacing(6)
+        .column_spacing(10)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    let attenuation_items = gtk::StringList::new(&["0", "1", "2", "3", "4", "5", "6", "7"]);
+
+    let attenuation_rumble_dropdown = DropDown::builder()
+        .model(&attenuation_items)
+        .selected(controller_state.attenuation[0].into())
+        .build();
+
+    let attenuation_trigger_dropdown = DropDown::builder()
+        .model(&attenuation_items)
+        .selected(controller_state.attenuation[1].into())
+        .build();
+
+    attenuation_rumble_dropdown.connect_selected_notify({
+        let controller = Arc::clone(&controller);
+        let attenuation_rumble_dropdown = attenuation_rumble_dropdown.clone();
+        move |_| {
+            let attenuation_rumble = attenuation_rumble_dropdown.selected() as u8;
+
+            let mut attenuation = vec![0; 2];
+            attenuation[0] = attenuation_rumble;
+
+            ////////
+            ////////
+            // TODO: attenuation as Vec<u8> with 2 elements, use two dropdowns for the fields and
+            // combine
+            ////////
+
+            let controller_clone = Arc::clone(&controller);
+            thread::spawn(move || {
+                if let Ok(mut ctrl) = controller_clone.lock() {
+                    change_attenuation_amount(attenuation, &mut ctrl);
+                    if let Err(err) = save_state(&*ctrl) {
+                        eprintln!("Failed to save controller state: {}", err);
+                    }
+                } else {
+                    eprintln!("Failed to lock controller for attenuation RUMBLE change.");
+                }
+            });
+        }
+    });
+
+    attenuation_trigger_dropdown.connect_selected_notify({
+        let controller = Arc::clone(&controller);
+        let attenuation_trigger_dropdown = attenuation_trigger_dropdown.clone();
+        move |_| {
+            let attenuation_trigger = attenuation_trigger_dropdown.selected() as u8;
+
+            let mut attenuation = vec![0; 2];
+            attenuation[1] = attenuation_trigger;
+
+            ////////
+            // TOOD: attenuations should be linked to struct
+            ////////
+            //
+            let controller_clone = Arc::clone(&controller);
+            thread::spawn(move || {
+                if let Ok(mut ctrl) = controller_clone.lock() {
+                    change_attenuation_amount(attenuation, &mut ctrl);
+                    if let Err(err) = save_state(&*ctrl) {
+                        eprintln!("Failed to save controller state: {}", err);
+                    }
+                } else {
+                    eprintln!("Failed to lock controller for attenuation TRIGGER change.");
+                }
+            });
+        }
+    });
+
+    grid.attach(&attenuation_rumble_dropdown, 1, 0, 1, 1);
+    grid.attach(&attenuation_trigger_dropdown, 2, 0, 1, 1);
+
+    grid
+}
+
+fn create_trigger_controls(
+    controller: Arc<Mutex<Controller>>,
+    controller_state: &Controller,
+) -> Grid {
+    let grid = gtk::Grid::builder()
+        .row_spacing(6)
+        .column_spacing(10)
+        .margin_top(12)
+        .margin_bottom(12)
+        .margin_start(12)
+        .margin_end(12)
+        .build();
+
+    let trigger_items = gtk::StringList::new(&["0", "1", "2", "3", "4", "5"]);
+
+    let trigger_dropdown = DropDown::builder()
+        .model(&trigger_items)
+        .selected(1)
+        .build();
+
+    trigger_dropdown.connect_selected_notify({
+        let controller = Arc::clone(&controller);
+        let trigger_dropdown = trigger_dropdown.clone();
+        move |_| {
+            let trigger = trigger_dropdown.selected() as u8;
+
+            let controller_clone = Arc::clone(&controller);
+            thread::spawn(move || {
+                if let Ok(mut ctrl) = controller_clone.lock() {
+                    change_trigger(&mut ctrl);
+                    if let Err(err) = save_state(&*ctrl) {
+                        eprintln!("Failed to save controller state: {}", err);
+                    }
+                } else {
+                    eprintln!("Failed to lock controller for player LED change.");
+                }
+            });
+        }
+    });
+
+    grid.attach(&Label::new(Some("Triggers")), 0, 0, 1, 1);
+    grid.attach(&trigger_dropdown, 1, 0, 1, 1);
+
+    grid
+}
+
 //////////////////////////////////////////////////////////
 // Main UI Function
 //////////////////////////////////////////////////////////
@@ -207,6 +511,11 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
         create_lightbar_controls(Arc::clone(&controller), &controller_state);
     let playerleds_controls_grid =
         create_playerleds_controls(Arc::clone(&controller), &controller_state);
+    let microphone_controls_grid =
+        create_microphone_controls(Arc::clone(&controller), &controller_state);
+    let speaker_controls_grid = create_speaker_controls(Arc::clone(&controller), &controller_state);
+    let attenuation_controls_grid =
+        create_attenuation_controls(Arc::clone(&controller), &controller_state);
 
     let settings_grid = gtk::Grid::builder()
         .row_spacing(10)
@@ -222,6 +531,13 @@ pub fn build_ui(app: &Application, controller: Arc<Mutex<Controller>>) -> Applic
     settings_grid.attach(&lightbar_controls_grid, 0, 3, 2, 1);
     settings_grid.attach(&Label::new(Some("Player LEDs")), 0, 4, 2, 1);
     settings_grid.attach(&playerleds_controls_grid, 0, 5, 2, 1);
+    settings_grid.attach(&Label::new(Some("Microphone")), 0, 6, 2, 1);
+    settings_grid.attach(&microphone_controls_grid, 0, 7, 2, 1);
+    settings_grid.attach(&Label::new(Some("Speaker")), 0, 8, 2, 1);
+    settings_grid.attach(&speaker_controls_grid, 0, 9, 2, 1);
+    settings_grid.attach(&Label::new(Some("Attenuation")), 0, 10, 2, 1);
+    settings_grid.attach(&attenuation_controls_grid, 0, 11, 2, 1);
+    settings_grid.attach(&Label::new(Some("Triggers")), 0, 12, 2, 1);
 
     let save_button = Button::builder()
         .label("Save")

@@ -10,7 +10,7 @@ pub struct Controller {
     pub microphone_led: bool,
     pub speaker: Speaker,
     pub volume: u8,
-    pub attentuation: u8,
+    pub attenuation: Vec<u8>,
     pub trigger: Trigger,
 }
 
@@ -25,7 +25,7 @@ impl Default for Controller {
             microphone_led: false,
             speaker: Speaker::Internal,
             volume: 0,
-            attentuation: 0,
+            attenuation: vec![0, 0],
             trigger: Trigger::default(),
         }
     }

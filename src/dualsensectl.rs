@@ -1,7 +1,7 @@
 use log::{error, info};
 use std::process::Command;
 
-use crate::structs::Controller;
+use crate::structs::{Controller, Speaker};
 
 pub fn toggle_lightbar(state: bool, controller: &mut Controller) {
     let command = if state {
@@ -52,6 +52,24 @@ pub fn change_playerleds_amount(state: u8, controller: &mut Controller) {
     controller.playerleds = state;
 }
 
+pub fn toggle_speaker(state: Speaker, controller: &mut Controller) {
+    let mut _command = "".to_string();
+
+    match state {
+        Speaker::Internal => _command = "dualsensectl speaker internal".to_string(),
+        Speaker::Headphone => _command = "dualsensectl speaker headphone".to_string(),
+        Speaker::Both => _command = "dualsensectl speaker both".to_string(),
+    }
+    info!("Executing command: {}", _command);
+
+    if let Err(err) = Command::new("sh").arg("-c").arg(&_command).output() {
+        error!("Failed to execute command '{}': {}", _command, err);
+        return;
+    }
+
+    controller.speaker = state;
+}
+
 pub fn change_lightbar_colour(state: Vec<u8>, controller: &mut Controller) {
     if state.len() != 4 {
         error!(
@@ -76,6 +94,100 @@ pub fn change_lightbar_colour(state: Vec<u8>, controller: &mut Controller) {
     controller.lightbar_enabled = true;
     info!("Lightbar colour changed and enabled.");
 }
+
+pub fn toggle_microphone(controller: &mut Controller) {
+    let command = if controller.microphone {
+        "dualsensectl microphone off".to_string()
+    } else {
+        "dualsensectl microphone on".to_string()
+    };
+
+    info!("Executing command: {}", command);
+
+    match Command::new("sh").arg("-c").arg(command.clone()).output() {
+        Ok(_) => {
+            controller.microphone = !controller.microphone;
+            info!(
+                "Successfully executed microphone toggle command. State: {}",
+                if !controller.microphone { "On" } else { "Off" }
+            );
+        }
+        Err(err) => {
+            error!("Failed to execute command '{}': {}", command, err);
+        }
+    }
+}
+
+pub fn toggle_microphone_led(controller: &mut Controller) {
+    let command = if controller.microphone_led {
+        "dualsensectl microphone-led off".to_string()
+    } else {
+        "dualsensectl microphone-led on".to_string()
+    };
+
+    info!("Executing command: {}", command);
+
+    match Command::new("sh").arg("-c").arg(command.clone()).output() {
+        Ok(_) => {
+            controller.microphone_led = !controller.microphone_led;
+            info!(
+                "Successfully executed microphone-led toggle command. State: {}",
+                if !controller.microphone_led {
+                    "On"
+                } else {
+                    "Off"
+                }
+            );
+        }
+        Err(err) => {
+            error!("Failed to execute command '{}': {}", command, err);
+        }
+    }
+}
+
+pub fn change_volume(volume: u8, controller: &mut Controller) {
+    let command = format!("dualsensectl volume {}", controller.volume);
+
+    info!("Executing command: {}", command);
+
+    match Command::new("sh").arg("-c").arg(command.clone()).output() {
+        Ok(_) => {
+            controller.volume = volume;
+            info!(
+                "Successfully executed volume toggle command. State: {}",
+                controller.volume
+            );
+        }
+        Err(err) => {
+            error!("Failed to execute command '{}': {}", command, err);
+        }
+    }
+}
+
+pub fn change_attenuation_amount(attenuation: Vec<u8>, controller: &mut Controller) {
+    if !(0..=7).contains(&attenuation[0]) || !(0..=7).contains(&attenuation[1]) {
+        error!(
+            "Invalid player attentuation attenuation: {} {}. RUMBLE and TRIGGER must be between 0 and 7.",
+            attenuation[0], attenuation[1]
+        );
+        return;
+    }
+
+    let command = format!(
+        "dualsensectl attenuation {} {}",
+        attenuation[0], attenuation[1]
+    );
+    info!("Executing command: {}", command);
+
+    if let Err(err) = Command::new("sh").arg("-c").arg(&command).output() {
+        error!("Failed to execute command '{}': {}", command, err);
+        return;
+    }
+
+    controller.attenuation = attenuation;
+}
+
+pub fn change_trigger(controller: &mut Controller) {}
 
 pub fn report_battery(controller: &mut Controller) -> String {
     let command = "dualsensectl battery";
