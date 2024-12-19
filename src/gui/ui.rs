@@ -42,7 +42,7 @@ fn create_lightbar_controls(
 
     lightbar_switch.connect_state_set({
         let controller_clone = Arc::clone(&controller);
-        let app_paths_clone = Arc::clone(&app_paths);
+        let app_paths_clone = Arc::clone(app_paths);
         move |_, state| {
             let controller_clone_inner = Arc::clone(&controller_clone);
             let app_paths_clone_inner = Arc::clone(&app_paths_clone);
@@ -275,7 +275,7 @@ fn create_playerleds_controls(
 
     playerleds_dropdown.connect_selected_notify({
         let controller_clone = Arc::clone(&controller);
-        let app_paths_clone = Arc::clone(&app_paths); // Clone Arc here for the closure
+        let app_paths_clone = Arc::clone(app_paths); // Clone Arc here for the closure
         let playerleds_dropdown = playerleds_dropdown.clone();
 
         move |_| {
@@ -321,7 +321,7 @@ fn create_speaker_controls(
 
     speaker_dropdown.connect_selected_notify({
         let controller_clone = Arc::clone(&controller);
-        let app_paths_clone = Arc::clone(&app_paths);
+        let app_paths_clone = Arc::clone(app_paths);
         let speaker_dropdown = speaker_dropdown.clone();
 
         move |_| {
@@ -366,7 +366,7 @@ fn create_speaker_controls(
 
     volume_slider.connect_value_changed({
         let controller_clone = Arc::clone(&controller);
-        let app_paths_clone = Arc::clone(&app_paths);
+        let app_paths_clone = Arc::clone(app_paths);
         move |_| {
             let volume = volume_adjustment.value().round() as u8;
             let controller_clone_inner = Arc::clone(&controller_clone);
@@ -783,7 +783,7 @@ fn create_trigger_controls(
         let effect_dropdown = effect_dropdown.clone();
         let input_grid = input_grid.clone();
         let trigger_effects = Arc::clone(&trigger_effects);
-        let app_paths = Arc::clone(&app_paths);
+        let app_paths = Arc::clone(app_paths);
 
         move |_| {
             let selected = effect_dropdown.selected() as usize;
