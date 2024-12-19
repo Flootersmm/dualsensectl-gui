@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use gtk::Button;
 use gtk::LevelBar;
 use gtk::{prelude::*, Label};
-use gtk::{Box, Entry, Grid, InputPurpose, Orientation, Popover, Switch, Widget};
+use gtk::{Box, DropDown, Entry, Grid, InputPurpose, Orientation, Popover, Switch, Widget};
 
 #[derive(Clone)]
 pub struct FieldConstraint {
@@ -226,7 +226,7 @@ pub fn get_field_constraints() -> HashMap<String, FieldConstraint> {
     constraints
 }
 
-fn validate_input(entry: &Entry, constraint: &FieldConstraint, popover: &Popover) -> bool {
+pub fn validate_input(entry: &Entry, constraint: &FieldConstraint, popover: &Popover) -> bool {
     let text = entry.text();
     let is_valid = text.split(',').all(|v| {
         v.trim()
@@ -249,7 +249,7 @@ fn validate_input(entry: &Entry, constraint: &FieldConstraint, popover: &Popover
     is_valid
 }
 
-fn show_error_popover(widget: &Widget, message: &str, popover: &Popover) {
+pub fn show_error_popover(widget: &Widget, message: &str, popover: &Popover) {
     let label = Label::new(Some(message));
     popover.set_child(Some(&label));
     popover.set_parent(widget);
@@ -443,6 +443,81 @@ pub fn create_help_popup(grid: &Grid, help_text: &str, position: (i32, i32)) {
     grid.attach(&help_button, position.0, position.1, 1, 1);
 }
 
+pub fn clear_grid(grid: &Grid) {
+    let mut child = grid.first_child();
+    while let Some(widget) = child {
+        child = widget.next_sibling();
+        grid.remove(&widget);
+    }
+}
+
+pub fn create_input_fields(grid: &Grid, labels: &[&str]) {
+    for (i, &label) in labels.iter().enumerate() {
+        if label == "Params [1..=9]" {
+            let side_dropdown = DropDown::builder()
+                .model(&gtk::StringList::new(&["left", "right", "both"]))
+                .selected(2)
+                .build();
+
+            let params_entry = Entry::builder()
+                .input_purpose(gtk::InputPurpose::Digits)
+                .tooltip_text(
+                    "Enter up to 9 comma-separated values (0-255), e.g., 255,127,6,0,0,20,0,0,0",
+                )
+                .hexpand(true)
+                .build();
+
+            params_entry.set_text("0,0,0,0,0,0,0,0,0");
+
+            params_entry.connect_changed(|entry| {
+                let text = entry.text();
+                let is_valid = validate_comma_separated_input_up_to_9(&text);
+                if is_valid {
+                    entry.set_css_classes(&[]);
+                } else {
+                    entry.set_css_classes(&["error"]);
+                }
+            });
+
+            grid.attach(&Label::new(Some("Side")), 0, i as i32, 1, 1);
+            grid.attach(&side_dropdown, 1, i as i32, 1, 1);
+            grid.attach(&Label::new(Some(label)), 0, (i + 1) as i32, 1, 1);
+            grid.attach(&params_entry, 1, (i + 1) as i32, 2, 1);
+        } else if label.contains("[10]") {
+            let entry = Entry::builder()
+                .input_purpose(gtk::InputPurpose::Digits)
+                .tooltip_text("Enter exactly 10 comma-separated values (0-255), e.g., 0,0,215,0,0,0,125,10,0,0")
+                .hexpand(true)
+                .build();
+
+            entry.set_text("0,0,0,0,0,0,0,0,0,0");
+
+            entry.connect_changed(|entry| {
+                let text = entry.text();
+                let is_valid = validate_comma_separated_input_exact_10(&text);
+                if is_valid {
+                    entry.set_css_classes(&[]);
+                } else {
+                    entry.set_css_classes(&["error"]);
+                }
+            });
+
+            grid.attach(&Label::new(Some(label)), 0, i as i32, 1, 1);
+            grid.attach(&entry, 1, i as i32, 2, 1);
+        } else {
+            let entry = Entry::builder()
+                .input_purpose(gtk::InputPurpose::Digits)
+                .hexpand(true)
+                .build();
+
+            entry.set_text("0");
+            grid.attach(&Label::new(Some(label)), 0, i as i32, 1, 1);
+            grid.attach(&entry, 1, i as i32, 2, 1);
+        }
+    }
+
+    grid.set_visible(true);
+}
 pub fn set_margins<W: gtk::prelude::WidgetExt>(widget: &W, margin: i32) {
     widget.set_margin_top(margin);
     widget.set_margin_bottom(margin);
