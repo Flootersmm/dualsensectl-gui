@@ -2,11 +2,17 @@ use gtk::gdk;
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-use crate::dualsensectl::{change_attenuation_amount, change_lightbar_colour, change_playerleds_amount, change_triggers, change_volume, toggle_lightbar, toggle_microphone, toggle_microphone_led, toggle_speaker};
+use crate::dualsensectl::{
+    change_attenuation_amount, change_lightbar_colour, change_playerleds_amount, change_triggers,
+    change_volume, toggle_lightbar, toggle_microphone, toggle_microphone_led, toggle_speaker,
+};
 use crate::gui::presets::create_presets_page;
 use crate::gui::profiles::create_profiles_page;
-use crate::gui::utils::{FieldConstraint, clear_grid, create_help_popup, create_labeled_level_bar, create_validated_input_field, get_field_constraints, get_input_values, set_margins};
-use crate::save::{AppPaths, load_state, save_state};
+use crate::gui::utils::{
+    clear_grid, create_help_popup, create_labeled_level_bar, create_validated_input_field,
+    get_field_constraints, get_input_values, set_margins, FieldConstraint,
+};
+use crate::save::{load_state, save_state, AppPaths};
 use crate::structs::{Controller, Speaker, TriggerEffect};
 
 use gtk::glib::Propagation;
@@ -903,7 +909,7 @@ pub fn build_ui(
     let presets_page = create_presets_page(&Arc::clone(&controller));
     stack.add_titled(&presets_page, Some("presets"), "Presets");
 
-    let profiles_page = create_profiles_page(&Arc::clone(&controller));
+    let profiles_page = create_profiles_page(&Arc::clone(&controller), &Arc::clone(&app_paths));
     stack.add_titled(&profiles_page, Some("profiles"), "Profiles");
 
     let main_box = Box::builder()
