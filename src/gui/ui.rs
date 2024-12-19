@@ -2,12 +2,12 @@ use gtk::gdk;
 use std::sync::{Arc, Mutex};
 use std::thread;
 
-use crate::dualsensectl::*;
-use crate::gui::presets::*;
-use crate::gui::profiles::*;
-use crate::gui::utils::*;
-use crate::save::*;
-use crate::structs::*;
+use crate::dualsensectl::{change_attenuation_amount, change_lightbar_colour, change_playerleds_amount, change_triggers, change_volume, toggle_lightbar, toggle_microphone, toggle_microphone_led, toggle_speaker};
+use crate::gui::presets::create_presets_page;
+use crate::gui::profiles::create_profiles_page;
+use crate::gui::utils::{FieldConstraint, clear_grid, create_help_popup, create_labeled_level_bar, create_validated_input_field, get_field_constraints, get_input_values, set_margins};
+use crate::save::{AppPaths, load_state, save_state};
+use crate::structs::{Controller, Speaker, TriggerEffect};
 
 use gtk::glib::Propagation;
 use gtk::prelude::*;
@@ -50,7 +50,7 @@ fn create_lightbar_controls(
                 if let Ok(mut ctrl) = controller_clone_inner.lock() {
                     toggle_lightbar(state, &mut ctrl);
                     if let Err(err) = save_state(&ctrl, &app_paths_clone_inner) {
-                        eprintln!("Failed to save controller state: {}", err);
+                        eprintln!("Failed to save controller state: {err}");
                     }
                 } else {
                     eprintln!("Failed to lock controller for lightbar toggle.");
@@ -65,15 +65,15 @@ fn create_lightbar_controls(
     color_dialog_button.set_dialog(&color_dialog);
 
     let rgba_color = gdk::RGBA::new(
-        controller_state.lightbar_colour[0] as f32 / 255.0,
-        controller_state.lightbar_colour[1] as f32 / 255.0,
-        controller_state.lightbar_colour[2] as f32 / 255.0,
+        f32::from(controller_state.lightbar_colour[0]) / 255.0,
+        f32::from(controller_state.lightbar_colour[1]) / 255.0,
+        f32::from(controller_state.lightbar_colour[2]) / 255.0,
         1.0,
     );
     color_dialog_button.set_rgba(&rgba_color);
 
     let brightness_adjustment = Adjustment::new(
-        controller_state.lightbar_colour[3] as f64,
+        f64::from(controller_state.lightbar_colour[3]),
         0.0,
         255.0,
         1.0,
@@ -197,7 +197,7 @@ fn create_microphone_controls(
                 if let Ok(mut ctrl) = controller_clone.lock() {
                     toggle_microphone(&mut ctrl);
                     if let Err(err) = save_state(&ctrl, &app_paths_clone) {
-                        eprintln!("Failed to save controller state: {}", err);
+                        eprintln!("Failed to save controller state: {err}");
                     }
                 } else {
                     eprintln!("Failed to lock controller for microphone toggle.");
@@ -217,7 +217,7 @@ fn create_microphone_controls(
                 if let Ok(mut ctrl) = controller_clone.lock() {
                     toggle_microphone_led(&mut ctrl);
                     if let Err(err) = save_state(&ctrl, &app_paths_clone) {
-                        eprintln!("Failed to save controller state: {}", err);
+                        eprintln!("Failed to save controller state: {err}");
                     }
                 } else {
                     eprintln!("Failed to lock controller for microphone led toggle.");
@@ -286,7 +286,7 @@ fn create_playerleds_controls(
                 if let Ok(mut ctrl) = controller_clone_inner.lock() {
                     change_playerleds_amount(playerleds, &mut ctrl);
                     if let Err(err) = save_state(&ctrl, &app_paths_clone_inner) {
-                        eprintln!("Failed to save controller state: {}", err);
+                        eprintln!("Failed to save controller state: {err}");
                     }
                 } else {
                     eprintln!("Failed to lock controller for player LED change.");
@@ -339,7 +339,7 @@ fn create_speaker_controls(
                 if let Ok(mut ctrl) = controller_clone_inner.lock() {
                     toggle_speaker(speaker, &mut ctrl);
                     if let Err(err) = save_state(&ctrl, &app_paths_clone_inner) {
-                        eprintln!("Failed to save controller state: {}", err);
+                        eprintln!("Failed to save controller state: {err}");
                     }
                 } else {
                     eprintln!("Failed to lock controller for speaker change.");
@@ -349,7 +349,7 @@ fn create_speaker_controls(
     });
 
     let volume_adjustment = Adjustment::new(
-        controller_state.lightbar_colour[3] as f64,
+        f64::from(controller_state.lightbar_colour[3]),
         0.0,
         255.0,
         1.0,
@@ -375,7 +375,7 @@ fn create_speaker_controls(
                 if let Ok(mut ctrl) = controller_clone_inner.lock() {
                     change_volume(volume, &mut ctrl);
                     if let Err(err) = save_state(&ctrl, &app_paths_clone_inner) {
-                        eprintln!("Failed to save controller state: {}", err);
+                        eprintln!("Failed to save controller state: {err}");
                     }
                 } else {
                     eprintln!("Failed to lock controller for volume change.");
@@ -426,7 +426,7 @@ fn create_attenuation_controls(
                     ctrl.attenuation[0] = attenuation_rumble;
                     change_attenuation_amount(ctrl.attenuation.clone(), &mut ctrl);
                     if let Err(err) = save_state(&ctrl, &app_paths_clone_inner) {
-                        eprintln!("Failed to save controller state: {}", err);
+                        eprintln!("Failed to save controller state: {err}");
                     }
                 } else {
                     eprintln!("Failed to lock controller for attenuation RUMBLE change.");
@@ -448,7 +448,7 @@ fn create_attenuation_controls(
                     ctrl.attenuation[1] = attenuation_trigger;
                     change_attenuation_amount(ctrl.attenuation.clone(), &mut ctrl);
                     if let Err(err) = save_state(&ctrl, &app_paths_clone_inner) {
-                        eprintln!("Failed to save controller state: {}", err);
+                        eprintln!("Failed to save controller state: {err}");
                     }
                 } else {
                     eprintln!("Failed to lock controller for attenuation TRIGGER change.");
@@ -793,16 +793,16 @@ fn create_trigger_controls(
                 "Feedback" => {
                     let values = get_input_values(&input_grid);
                     new_effect = TriggerEffect::Feedback {
-                        position: values.first().cloned().unwrap_or_default(),
-                        strength: values.get(1).cloned().unwrap_or_default(),
+                        position: values.first().copied().unwrap_or_default(),
+                        strength: values.get(1).copied().unwrap_or_default(),
                     };
                 }
                 "Weapon" => {
                     let values = get_input_values(&input_grid);
                     new_effect = TriggerEffect::Weapon {
-                        start: values.first().cloned().unwrap_or_default(),
-                        stop: values.get(1).cloned().unwrap_or_default(),
-                        strength: values.get(2).cloned().unwrap_or_default(),
+                        start: values.first().copied().unwrap_or_default(),
+                        stop: values.get(1).copied().unwrap_or_default(),
+                        strength: values.get(2).copied().unwrap_or_default(),
                     };
                 }
                 _ => {}
@@ -814,7 +814,7 @@ fn create_trigger_controls(
                 change_triggers(&ctrl.trigger);
 
                 if let Err(err) = save_state(&ctrl, &app_paths) {
-                    eprintln!("Failed to save controller state: {}", err);
+                    eprintln!("Failed to save controller state: {err}");
                 }
             } else {
                 eprintln!("Failed to lock controller to apply trigger effect.");
@@ -928,7 +928,7 @@ pub fn build_ui(
         move |win| {
             if let Ok(controller) = controller_clone.lock() {
                 if let Err(err) = save_state(&controller, &app_paths_clone) {
-                    eprintln!("Failed to save controller state: {}", err);
+                    eprintln!("Failed to save controller state: {err}");
                 }
             } else {
                 eprintln!("Failed to lock controller for saving state.");

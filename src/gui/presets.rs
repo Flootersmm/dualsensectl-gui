@@ -162,7 +162,7 @@ pub fn run_command(command: &str, controller: &mut Controller) -> Result<(), Str
     let output = Command::new(parts[0])
         .args(&parts[1..])
         .output()
-        .map_err(|e| format!("Failed to execute command: {}", e))?;
+        .map_err(|e| format!("Failed to execute command: {e}"))?;
 
     if output.status.success() {
         info!("Command succeeded: {}", command);
@@ -265,7 +265,7 @@ pub fn run_command(command: &str, controller: &mut Controller) -> Result<(), Str
                     };
                 }
                 "mode" => {
-                    let params = parts[4..].iter().map(|s| s.to_string()).collect();
+                    let params = parts[4..].iter().map(|s| (*s).to_string()).collect();
                     controller.trigger = Trigger {
                         side,
                         effect: TriggerEffect::Mode { params },
@@ -291,7 +291,7 @@ pub fn run_command(command: &str, controller: &mut Controller) -> Result<(), Str
 
 pub fn apply_preset(preset: &Preset, controller: &mut Controller) {
     match run_command(preset.command, controller) {
-        Ok(_) => info!("Preset '{}' applied successfully.", preset.name),
+        Ok(()) => info!("Preset '{}' applied successfully.", preset.name),
         Err(err) => error!("Failed to apply preset '{}': {}", preset.name, err),
     }
 }
@@ -339,10 +339,10 @@ pub fn create_presets_page(controller: &Arc<Mutex<Controller>>) -> ScrolledWindo
             thread::spawn(move || {
                 if let Ok(mut ctrl) = controller_clone_inner.lock() {
                     if let Err(err) = run_command(&command_clone, &mut ctrl) {
-                        eprintln!("Failed to execute command '{}': {}", command_clone, err);
+                        eprintln!("Failed to execute command '{command_clone}': {err}");
                     }
                 } else {
-                    eprintln!("Failed to lock controller for preset '{}'.", command_clone);
+                    eprintln!("Failed to lock controller for preset '{command_clone}'.");
                 }
             });
         });

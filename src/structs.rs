@@ -185,7 +185,7 @@ impl Trigger {
             TriggerEffect::FeedbackRaw { strength } => {
                 let strengths = strength
                     .iter()
-                    .map(|s| s.to_string())
+                    .map(std::string::ToString::to_string)
                     .collect::<Vec<_>>()
                     .join(" ");
                 format!("trigger {} feedback-raw [{}]", self.side, strengths)
@@ -196,7 +196,7 @@ impl Trigger {
             } => {
                 let amplitudes = amplitude
                     .iter()
-                    .map(|a| a.to_string())
+                    .map(std::string::ToString::to_string)
                     .collect::<Vec<_>>()
                     .join(" ");
                 format!(

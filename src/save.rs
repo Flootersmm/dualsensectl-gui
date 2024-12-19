@@ -97,7 +97,7 @@ impl AppPaths {
 pub fn save_state(controller: &Controller, app_paths: &Arc<AppPaths>) -> io::Result<()> {
     let state_file = app_paths.config.join(STATE_FILE_NAME);
 
-    eprintln!("Saving controller state: {:?}", controller);
+    eprintln!("Saving controller state: {controller:?}");
     let json = serde_json::to_string_pretty(controller)?;
     let mut file = fs::File::create(state_file)?;
     file.write_all(json.as_bytes())?;
@@ -110,7 +110,7 @@ pub fn load_state(app_paths: &Arc<AppPaths>) -> Controller {
 
     if let Ok(json) = fs::read_to_string(&state_file) {
         if let Ok(state) = serde_json::from_str::<Controller>(&json) {
-            eprintln!("Loaded state: {:?}", state);
+            eprintln!("Loaded state: {state:?}");
             return state;
         } else {
             eprintln!("Failed to deserialize {}", state_file.display());
@@ -127,8 +127,7 @@ pub fn truncate_log(log_path: &std::path::Path) {
         let metadata = file.metadata().expect("Failed to get file metadata");
         if metadata.len() as usize > MAX_LOG_SIZE {
             println!(
-                "Truncating log file as it exceeds the max size of {} bytes.",
-                MAX_LOG_SIZE
+                "Truncating log file as it exceeds the max size of {MAX_LOG_SIZE} bytes."
             );
 
             let mut buffer = Vec::with_capacity(MAX_LOG_SIZE / 2);

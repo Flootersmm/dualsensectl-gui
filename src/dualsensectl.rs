@@ -1,7 +1,7 @@
 use log::{error, info};
 use std::process::Command;
 
-use crate::structs::*;
+use crate::structs::{Controller, Speaker, Trigger};
 
 /// Enables/disables the lightbar
 pub fn toggle_lightbar(state: bool, controller: &mut Controller) {
@@ -43,7 +43,7 @@ pub fn change_playerleds_amount(state: u8, controller: &mut Controller) {
         return;
     }
 
-    let command = format!("dualsensectl player-leds {}", state);
+    let command = format!("dualsensectl player-leds {state}");
     info!("Executing command: {}", command);
 
     if let Err(err) = Command::new("sh").arg("-c").arg(&command).output() {
@@ -59,7 +59,7 @@ pub fn change_playerleds_amount(state: u8, controller: &mut Controller) {
 /// Internal, Headphone, Monoheadphone (left side), Both (Internal &
 /// Headphone)
 pub fn toggle_speaker(state: Speaker, controller: &mut Controller) {
-    let mut _command = "".to_string();
+    let mut _command = String::new();
 
     match state {
         Speaker::Internal => _command = "dualsensectl speaker internal".to_string(),
@@ -162,7 +162,7 @@ pub fn toggle_microphone_led(controller: &mut Controller) {
 ///
 /// 50+ is audible on Headphones
 pub fn change_volume(volume: u8, controller: &mut Controller) {
-    let command = format!("dualsensectl volume {}", volume);
+    let command = format!("dualsensectl volume {volume}");
 
     info!("Executing command: {}", command);
 
@@ -245,7 +245,7 @@ pub fn report_battery(controller: &mut Controller) -> String {
 
                 controller.battery_percentage = battery_percentage;
 
-                format!("{}%", battery_percentage)
+                format!("{battery_percentage}%")
             } else {
                 error!("Failed to parse command stdout as UTF-8");
                 "Error: Invalid UTF-8 output".to_string()
@@ -253,7 +253,7 @@ pub fn report_battery(controller: &mut Controller) -> String {
         }
         Err(err) => {
             error!("Failed to execute command '{}': {}", command, err);
-            format!("Error: {}", err)
+            format!("Error: {err}")
         }
     }
 }
