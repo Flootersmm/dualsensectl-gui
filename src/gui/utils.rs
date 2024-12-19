@@ -5,6 +5,7 @@ use gtk::LevelBar;
 use gtk::{prelude::*, Label};
 use gtk::{Box, DropDown, Entry, Grid, InputPurpose, Orientation, Popover, Switch, Widget};
 
+/// Trigger field min, max, and tooltip
 #[derive(Clone)]
 pub struct FieldConstraint {
     pub min: u8,
@@ -518,6 +519,7 @@ pub fn create_input_fields(grid: &Grid, labels: &[&str]) {
 
     grid.set_visible(true);
 }
+
 pub fn set_margins<W: gtk::prelude::WidgetExt>(widget: &W, margin: i32) {
     widget.set_margin_top(margin);
     widget.set_margin_bottom(margin);

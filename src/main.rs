@@ -5,6 +5,7 @@ mod gui;
 mod save;
 mod structs;
 
+use clap::Parser;
 use env_logger::Builder;
 use gtk::glib;
 use gtk::prelude::*;

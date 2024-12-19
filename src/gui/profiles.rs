@@ -1,8 +1,12 @@
-use gtk::prelude::*;
-use gtk::{Box, Label, Orientation};
+use gtk::{prelude::*, ScrolledWindow};
+use gtk::{Box, Label, Orientation, Separator};
+use std::sync::{Arc, Mutex};
+use std::thread;
 
-pub fn create_profiles_page() -> Box {
-    let profiles_box = Box::builder()
+use crate::structs::{Controller, Trigger, TriggerEffect};
+
+pub fn create_profiles_page(controller: &Arc<Mutex<Controller>>) -> ScrolledWindow {
+    let presets_box = Box::builder()
         .orientation(Orientation::Vertical)
         .spacing(10)
         .margin_top(12)
@@ -11,9 +15,11 @@ pub fn create_profiles_page() -> Box {
         .margin_end(12)
         .build();
 
-    let label = Label::new(Some("Profiles Page\nManage your profiles here."));
-    label.set_halign(gtk::Align::Center);
-    profiles_box.append(&label);
+    let scrolled_window = ScrolledWindow::builder()
+        .min_content_width(400)
+        .min_content_height(400)
+        .child(&presets_box)
+        .build();
 
-    profiles_box
+    scrolled_window
 }

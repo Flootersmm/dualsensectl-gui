@@ -89,7 +89,6 @@ fn create_lightbar_controls(
         .build();
 
     let apply_lightbar_changes = {
-        let controller = Arc::clone(&controller);
         let color_dialog_button = color_dialog_button.clone();
         let brightness_adjustment = brightness_adjustment.clone();
         move || {
@@ -188,7 +187,6 @@ fn create_microphone_controls(
     microphone_led_switch.set_hexpand(false);
     microphone_led_switch.set_halign(gtk::Align::Center);
 
-    // Use the same controller Arc for both closures
     microphone_switch.connect_state_set({
         let controller_clone = Arc::clone(&controller);
         let app_paths_clone = Arc::clone(app_paths);
@@ -905,7 +903,7 @@ pub fn build_ui(
     let presets_page = create_presets_page(&Arc::clone(&controller));
     stack.add_titled(&presets_page, Some("presets"), "Presets");
 
-    let profiles_page = create_profiles_page();
+    let profiles_page = create_profiles_page(&Arc::clone(&controller));
     stack.add_titled(&profiles_page, Some("profiles"), "Profiles");
 
     let main_box = Box::builder()
