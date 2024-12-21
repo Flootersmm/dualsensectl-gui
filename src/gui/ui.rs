@@ -6,6 +6,7 @@ use crate::dualsensectl::{
     change_attenuation_amount, change_lightbar_colour, change_playerleds_amount, change_triggers,
     change_volume, toggle_lightbar, toggle_microphone, toggle_microphone_led, toggle_speaker,
 };
+
 use crate::gui::presets::create_presets_page;
 use crate::gui::profiles::create_profiles_page;
 use crate::gui::utils::{
@@ -23,6 +24,7 @@ use gtk::{
 };
 
 // TODO: Also make .desktop
+// TODO: dualsensectl microphone-led pulse???
 
 //////////////////////////////////////////////////////////
 // Utility Functions

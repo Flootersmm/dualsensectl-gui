@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=DualSenseCtl GUI
+Exec=/usr/bin/dualsensectl-gui
+Icon=dualsensectl-gui
+Terminal=false
+Categories=Utility;
+StartupNotify=true
+
